@@ -16,8 +16,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         builder => builder
             .WithOrigins("http://localhost:3000")
+            .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader());
+});
+
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+    options.HttpsPort = 443;
 });
 
 var app = builder.Build();
