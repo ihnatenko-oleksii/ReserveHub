@@ -1,38 +1,177 @@
 version: '3.8'
 
 services:
-  frontend:
+  # 🔹 Service Discovery (Eureka)
+  service-discovery:
     build:
-      context: ./frontend
+      context: ./backend/service_discovery
       dockerfile: Dockerfile
+    container_name: service-discovery
     ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    environment:
-      - REACT_APP_API_URL=http://localhost:5000
+      - "8761:8761"
+    networks:
+      - reservehub-network
 
-  backend:
+  # 🔹 Config Server
+  config-server:
     build:
-      context: ./backend
+      context: ./backend/config_server
       dockerfile: Dockerfile
+    container_name: config-server
     ports:
-      - "5000:80"
+      - "8888:8888"
     depends_on:
-      - db
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=db;Database=ReserveHub;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
-      - ASPNETCORE_ENVIRONMENT=Development
+      - service-discovery
+    networks:
+      - reservehub-network
 
-  db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+  # 🔹 PostgreSQL dla User Service
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres-user
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: userdb
     ports:
-      - "1434:1433"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
+      - "5433:5432"
+    networks:
+      - reservehub-network
+
+  # 🔹 User Service
+  user-service:
+    build:
+      context: ./backend/user_service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-user
+      - service-discovery
+      - config-server
+    networks:
+      - reservehub-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/userdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+
+  # 🔹 PostgreSQL dla Reservation Service
+  postgres-reservation:
+    image: postgres:latest
+    container_name: postgres-reservation
+    environment:
+      POSTGRES_USER: reservation
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: reservationdb
+    ports:
+      - "5434:5432"
+    networks:
+      - reservehub-network
+
+  # 🔹 Reservation Service
+  reservation-service:
+    build:
+      context: ./backend/reservation_service
+      dockerfile: Dockerfile
+    container_name: reservation-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-reservation
+      - service-discovery
+      - config-server
+    networks:
+      - reservehub-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/reservationdb
+      SPRING_DATASOURCE_USERNAME: reservation
+      SPRING_DATASOURCE_PASSWORD: password
+
+  # 🔹 PostgreSQL dla Payment Service
+  postgres-payment:
+    image: postgres:latest
+    container_name: postgres-payment
+    environment:
+      POSTGRES_USER: payment
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: paymentdb
+    ports:
+      - "5435:5432"
+    networks:
+      - reservehub-network
+
+  # 🔹 Payment Service
+  payment-service:
+    build:
+      context: ./backend/payment_service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres-payment
+      - service-discovery
+      - config-server
+    networks:
+      - reservehub-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-payment:5432/paymentdb
+      SPRING_DATASOURCE_USERNAME: payment
+      SPRING_DATASOURCE_PASSWORD: password
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+
+  # 🔹 Redis dla Notification Service
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - reservehub-network
+
+  # 🔹 Notification Service
+  notification-service:
+    build:
+      context: ./backend/notification_service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - redis
+      - service-discovery
+      - config-server
+    networks:
+      - reservehub-network
+    environment:
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+
+  # 🔹 API Gateway
+  api-gateway:
+    build:
+      context: ./backend/api_gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-discovery
+      - config-server
+      - user-service
+      - reservation-service
+      - payment-service
+      - notification-service
+    networks:
+      - reservehub-network
 
 volumes:
-  sqlserver_data: 
+  user-data:
+  reservation-data:
+  payment-data:
+
+networks:
+  reservehub-network:
+    driver: bridge 
