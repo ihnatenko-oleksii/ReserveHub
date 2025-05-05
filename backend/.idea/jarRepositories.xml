@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="hateatos" />
+      <option name="name" value="hateatos" />
+      <option name="url" value="https://maven.restlet.talend.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jasper-thirdparty" />
+      <option name="name" value="jasper-thirdparty" />
+      <option name="url" value="https://jaspersoft.jfrog.io/artifactory/third-party-ce-artifacts" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss-redhat-3th-party" />
+      <option name="name" value="jboss repo 3th party" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jasper-ce-releases" />
+      <option name="name" value="jasper-ce-releases" />
+      <option name="url" value="https://jaspersoft.jfrog.io/artifactory/jr-ce-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local-repository" />
+      <option name="url" value="file:////home/oleksii-ubuntu/.m2/repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus.ccf.rocks-krs-ccf" />
+      <option name="name" value="nexus.ccf.rocks-krs-ccf" />
+      <option name="url" value="https://nexus.ccf.rocks/repository/krs-ccf/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss-redhat" />
+      <option name="name" value="jboss repo" />
+      <option name="url" value="https://maven.repository.redhat.com/ga/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss-ea" />
+      <option name="name" value="jboss-ea" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/ea/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="swirabc" />
+      <option name="name" value="swirabc" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus.ccf.rocks" />
+      <option name="name" value="nexus.ccf.rocks" />
+      <option name="url" value="https://nexus.ccf.rocks/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss-maven2-x" />
+      <option name="name" value="jboss-maven2-x" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/groups/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus.ccf.rocks-krs-ms" />
+      <option name="name" value="nexus.ccf.rocks-krs-ms" />
+      <option name="url" value="https://nexus.ccf.rocks/repository/krs-ms/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="javax.servlet-api" />
+      <option name="name" value="javax.servlet-api" />
+      <option name="url" value="https://mvnrepository.com/artifact/javax.servlet/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="java.net-maven2-repository" />
+      <option name="name" value="Java.net Repository for Maven" />
+      <option name="url" value="https://maven.java.net/content/repositories/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="prime-repo" />
+      <option name="name" value="PrimeFaces Maven Repository" />
+      <option name="url" value="https://repository.primefaces.org" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus.ccf.rocks-epl-ms" />
+      <option name="name" value="nexus.ccf.rocks-epl-ms" />
+      <option name="url" value="https://nexus.ccf.rocks/repository/epl-ms/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven1repo" />
+      <option name="name" value="maven1repo" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="vaading-addon" />
+      <option name="name" value="vaading-addon" />
+      <option name="url" value="https://vaadin.com/nexus/content/repositories/vaadin-addon" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="vaading" />
+      <option name="name" value="vaading" />
+      <option name="url" value="https://vaadin.com/nexus/content/repositories/vaadin-addons" />
+    </remote-repository>
+  </component>
+</project>
