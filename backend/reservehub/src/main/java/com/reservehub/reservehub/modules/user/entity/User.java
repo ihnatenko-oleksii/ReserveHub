@@ -1,20 +1,21 @@
-package com.reservehub.reservehub.modules.user.entity;
+package com.reservehub.reservehub.modules.modules.user.entity;
 
-import com.reservehub.reservehub.modules.company.entity.Company;
+import com.reservehub.reservehub.modules.modules.common.enums.Role;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
-@Table(name = "users")
-@Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
@@ -33,17 +35,39 @@ public class User {
 
     private String country;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "is_provider")
+    private Boolean isProvider;
+
+    @Column(precision = 3, scale = 2)
+    private BigDecimal rating;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
 
-    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 } 

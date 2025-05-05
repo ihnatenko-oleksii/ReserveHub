@@ -1,4 +1,4 @@
-package com.reservehub.reservehub.modules.invoice.entity;
+package com.reservehub.reservehub.modules.common.enums;
 
 public enum InvoiceStatus {
     UNPAID,
