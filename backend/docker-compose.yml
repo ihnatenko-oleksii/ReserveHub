@@ -5,8 +5,8 @@ services:
     container_name: reservehub_postgres
     environment:
       POSTGRES_DB: reservehub
-      POSTGRES_USER: reservehub_user
-      POSTGRES_PASSWORD: reservehub_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:

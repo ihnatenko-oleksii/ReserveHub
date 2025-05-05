@@ -1,4 +1,4 @@
-package com.reservehub.reservehub.modules.common.enums;
+package com.reservehub.reservehub.modules.report.enums;
 
 public enum ReportType {
     BOOKINGS_PER_MONTH,

@@ -1,4 +1,4 @@
-package com.reservehub.reservehub.modules.common.enums;
+package com.reservehub.reservehub.modules.reservation.enums;
 
 public enum ReservationStatus {
     PENDING,

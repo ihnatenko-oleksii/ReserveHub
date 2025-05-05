@@ -1,6 +1,6 @@
-package com.reservehub.reservehub.modules.modules.user.entity;
+package com.reservehub.reservehub.modules.user.entity;
 
-import com.reservehub.reservehub.modules.modules.common.enums.Role;
+import com.reservehub.reservehub.modules.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +44,6 @@ public class User {
     @Column(name = "is_provider")
     private Boolean isProvider;
 
-    @Column(precision = 3, scale = 2)
     private BigDecimal rating;
 
     @Enumerated(EnumType.STRING)
@@ -54,7 +53,7 @@ public class User {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
