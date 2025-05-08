@@ -1,6 +1,6 @@
-package com.reservehub.reservehub.modules.user.entity;
+package com.reservehub.reservehub.modules.service.entity;
 
-import com.reservehub.reservehub.modules.service.entity.Service;
+import com.reservehub.reservehub.modules.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

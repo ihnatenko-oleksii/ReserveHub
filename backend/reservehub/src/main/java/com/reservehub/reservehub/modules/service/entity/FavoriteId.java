@@ -1,4 +1,4 @@
-package com.reservehub.reservehub.modules.user.entity;
+package com.reservehub.reservehub.modules.service.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
