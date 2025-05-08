@@ -1,6 +1,40 @@
 # ReserveHub
 
-ReserveHub is a reservation management system built with .NET Core backend and React frontend.
+
+## Technology
+
+<h4>Backend - Java Spring Boot<br>  
+Frontend - React</h4>
+
+## Description
+
+<h3>EN 🇬🇧</h3>
+ReserveHub is a modern service booking platform designed for direct collaboration between private users. Every user can offer their own services and book services from others — the system operates in a C2C (consumer-to-consumer) model.
+
+The platform allows users to create, edit, and delete services, as well as rate, like, and add them to favorites. Bookings are easy to manage — users can create, reschedule, or cancel reservations with just a few clicks. The system supports searching for services based on location, price, rating, and category.
+
+Users can communicate directly through a built-in chat linked to specific services, which simplifies asking questions before making a booking.
+
+ReserveHub automatically generates PDF invoices after each booking and allows users to download them. The system supports service providers with a built-in CRM — including client history, bookings, and revenue tracking. Reports (e.g., monthly summaries of bookings, income, or top services) can be exported to PDF and CSV files.
+
+Security is ensured through JWT (JSON Web Token) and Role-Based Access Control (RBAC), ensuring that each role — client, service provider, or admin — only has access to the relevant features.
+
+The platform will be available on both desktop and mobile devices, with a responsive and intuitive interface. Payments will be handled exclusively via Apple Pay and Google Pay, with full tokenization and security support.
+
+<h3>PL 🇵🇱</h3>
+ReserveHub to nowoczesna platforma rezerwacji usług stworzona z myślą o bezpośredniej współpracy między prywatnymi użytkownikami. Każdy użytkownik może oferować własne usługi oraz rezerwować usługi innych — system działa w modelu C2C (consumer-to-consumer). 
+
+Platforma umożliwia tworzenie, edytowanie oraz usuwanie usług, a także ich ocenianie, polubienie i dodawanie do ulubionych. Rezerwacje można z łatwością zarządzać: tworzyć, modyfikować termin, anulować. System wspiera wyszukiwanie usług według lokalizacji, ceny, oceny i kategorii. 
+
+Użytkownicy mogą komunikować się bezpośrednio ze sobą za pomocą wbudowanego czatu powiązanego z konkretną usługą — co ułatwia zadawanie pytań przed dokonaniem rezerwacji. 
+
+ReserveHub automatycznie generuje faktury PDF po dokonaniu rezerwacji i umożliwia ich pobieranie. System wspiera użytkowników oferujących usługi poprzez wbudowany CRM — z historią klientów, rezerwacji i przychodów. Raporty (np. miesięczne zestawienia rezerwacji, przychodów czy top usług) można eksportować do plików PDF i CSV. 
+
+Bezpieczeństwo zapewnione jest przez JWT (JSON Web Token) oraz Role-Based Access Control (RBAC), dzięki czemu każda rola — klient, usługodawca, administrator — ma dostęp tylko do odpowiednich funkcji. 
+
+Platforma będzie dostępna zarówno na komputery, jak i urządzenia mobilne, z responsywnym i intuicyjnym interfejsem. Płatności będą obsługiwane wyłącznie przez Apple Pay i Google Pay — z pełnym wsparciem tokenizacji i bezpieczeństwa. 
+
+# Technical
 
 ## Prerequisites
 
