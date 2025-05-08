@@ -34,9 +34,22 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Publiczne
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                        .requestMatchers("/api/provider/**").hasRole(Role.PROVIDER.name())
+
+                        // Tylko dla ADMINA
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // Użytkownicy (USER i ADMIN)
+                        .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/services/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/reservations/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/reviews/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/favorites/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/chat/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/invoices/**").hasAnyRole("USER", "ADMIN")
+
+                        // Wszystko inne – wymaga zalogowania
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
