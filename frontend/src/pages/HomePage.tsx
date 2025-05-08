@@ -1,16 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Welcome to ReserveHub
-          </h1>
-          <p className="text-xl text-gray-600">
-            Your one-stop solution for managing reservations
-          </p>
+        <div className="flex items-center justify-center mb-16">
+          <img src="/logo.png" alt="ReserveHub Logo" className="h-16 w-16 mr-4" />
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+              Welcome to ReserveHub
+            </h1>
+            <p className="text-xl text-gray-600">
+              Your one-stop solution for managing reservations
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -48,7 +53,17 @@ const HomePage: React.FC = () => {
           </button>
         </div>
       </div>
+      <div className="flex justify-center mt-4">
+        <Link to="/login" className="text-blue-600 underline mr-4">
+          Log in
+        </Link>
+        <Link to="/Register" className="text-cyan-600 underline">
+          Sing Up
+        </Link>
+      </div>
+
     </div>
+
   );
 };
 
