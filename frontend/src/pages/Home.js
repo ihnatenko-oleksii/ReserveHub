@@ -7,6 +7,9 @@ function Home() {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Umów się online</h1>
+          <h1 class="text-3xl font-bold underline">
+            Hello world!
+          </h1>
           <p className="hero-description">
             Chcesz umówić się do fryzjera, barbera, stylistki paznokci lub salonu
             masażu w okolicy? Szukasz miejsca, w którym najlepsi specjaliści
@@ -17,8 +20,8 @@ function Home() {
             znajdziesz wolny termin i wygodnie umówisz się na wizytę. Bez
             dzwonienia — rezerwujesz o każdej porze i z dowolnego miejsca.
           </p>
-          <Link 
-            to="/services" 
+          <Link
+            to="/services"
             style={{
               display: 'inline-block',
               padding: '12px 24px',
@@ -34,8 +37,8 @@ function Home() {
           </Link>
         </div>
         <div className="hero-image">
-          <img 
-            src="/images/reservation-illustration.svg" 
+          <img
+            src="/images/reservation-illustration.svg"
             alt="Rezerwacja online"
             style={{ width: '100%', maxWidth: '500px' }}
           />
@@ -44,8 +47,8 @@ function Home() {
 
       <section className="secondary-section">
         <div className="secondary-image">
-          <img 
-            src="/images/mobile-app.svg" 
+          <img
+            src="/images/mobile-app.svg"
             alt="Aplikacja mobilna"
             style={{ width: '100%', maxWidth: '400px' }}
           />
