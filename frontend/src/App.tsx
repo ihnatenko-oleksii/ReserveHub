@@ -1,16 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './components/HomePage.tsx';
+import LoginPage from './components/LoginPage.tsx';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1 className="text-3xl font-bold underline text-blue-500">lyoha v goru ne poszol lyosha goru abashol!</h1>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
+  );
 }
 
 export default App
