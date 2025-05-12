@@ -8,7 +8,6 @@ public class ReservehubApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ReservehubApplication.class, args);
-        System.out.println("STARTED RESERVE HUB");
     }
 
 }

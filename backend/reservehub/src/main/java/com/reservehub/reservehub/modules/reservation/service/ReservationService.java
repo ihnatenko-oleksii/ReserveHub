@@ -1,5 +1,6 @@
 package com.reservehub.reservehub.modules.reservation.service;
 
+import com.reservehub.reservehub.modules.invoice.service.InvoiceService;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationDTO;
 import com.reservehub.reservehub.modules.reservation.entity.Reservation;
 import com.reservehub.reservehub.modules.reservation.enums.ReservationStatus;
@@ -24,6 +25,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final ServiceRepository serviceRepository;
+    private final InvoiceService invoiceService;
 
     @Transactional
     public ReservationDTO createReservation(ReservationDTO dto) {
@@ -68,6 +70,7 @@ public class ReservationService {
         Service service = serviceRepository.findById(dto.getServiceId())
                 .orElseThrow(() -> new RuntimeException("Service not found"));
 
+        ReservationStatus oldStatus = reservation.getStatus();
         reservation.setUser(user);
         reservation.setProvider(provider);
         reservation.setService(service);
@@ -77,7 +80,14 @@ public class ReservationService {
         reservation.setStatus(dto.getStatus());
         reservation.setUpdatedAt(LocalDateTime.now());
 
-        return mapToDTO(reservationRepository.save(reservation));
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // Generate invoice if status changed to CONFIRMED
+        if (oldStatus != ReservationStatus.CONFIRMED && dto.getStatus() == ReservationStatus.CONFIRMED) {
+            invoiceService.generateInvoiceForReservation(savedReservation.getId());
+        }
+
+        return mapToDTO(savedReservation);
     }
 
     @Transactional
