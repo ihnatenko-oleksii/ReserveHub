@@ -1,5 +1,6 @@
 package com.reservehub.reservehub.modules.chat.entity;
 
+import com.reservehub.reservehub.modules.reservation.entity.Reservation;
 import com.reservehub.reservehub.modules.service.entity.Service;
 import com.reservehub.reservehub.modules.user.entity.User;
 import jakarta.persistence.*;
