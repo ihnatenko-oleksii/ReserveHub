@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
-const CreateService = () => {
+interface Service {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  category: string;
+  imageUrl?: string;
+}
+
+const EditService = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -15,6 +26,31 @@ const CreateService = () => {
     category: '',
     image: null as File | null,
   });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const res = await api.get<Service>(`/services/${id}`);
+        const service = res.data;
+        setFormData({
+          name: service.name,
+          description: service.description,
+          price: service.price.toString(),
+          duration: service.duration.toString(),
+          category: service.category,
+          image: null,
+        });
+      } catch (err) {
+        console.error('Failed to load service:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchService();
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -35,7 +71,7 @@ const CreateService = () => {
     e.preventDefault();
 
     if (user?.role !== 'PROVIDER') {
-      alert('Only providers can create services.');
+      alert('Only providers can edit services.');
       return;
     }
 
@@ -50,19 +86,26 @@ const CreateService = () => {
         data.append('image', formData.image);
       }
 
-      const res = await api.post('/services', data, {
+      await api.put(`/services/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      console.log('Service created:', res.data);
-      navigate('/dashboard'); // або інша сторінка після створення
+      navigate('/dashboard'); // або на сторінку сервісу
     } catch (err) {
-      console.error('Failed to create service:', err);
-      alert('Error while creating the service.');
+      console.error('Failed to update service:', err);
+      alert('Failed to update service');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
@@ -71,7 +114,7 @@ const CreateService = () => {
         className="bg-white p-8 shadow rounded w-full max-w-lg space-y-4"
       >
         <h2 className="text-2xl font-bold text-center text-gray-800">
-          Create a new service
+          Edit Service
         </h2>
 
         <input
@@ -141,11 +184,11 @@ const CreateService = () => {
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
         >
-          Create
+          Update Service
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateService;
+export default EditService;

@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from '../api/axios';
@@ -14,14 +14,19 @@ interface Service {
   rating?: number;
   likes?: number;
   providerName?: string;
+  providerId: string;
 }
 
 const ServiceDetails = () => {
   const { id } = useParams();
-  const { user, isAuthenticated } = useAuth(); // лишаємо user
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
+
+  const isOwner =
+    user?.role === 'PROVIDER' && user.id === service?.providerId;
 
   useEffect(() => {
     const fetchService = async () => {
@@ -44,6 +49,19 @@ const ServiceDetails = () => {
       await axios.post(`/services/${id}/like`);
     } catch (err) {
       console.error('Failed to like service:', err);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = confirm('Are you sure you want to delete this service?');
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`/services/${id}`);
+      navigate('/my-services');
+    } catch (err) {
+      console.error('Failed to delete service:', err);
+      alert('Failed to delete service.');
     }
   };
 
@@ -73,7 +91,26 @@ const ServiceDetails = () => {
             className="w-full h-64 object-cover rounded"
           />
         )}
-        <h1 className="text-3xl font-bold text-gray-900">{service.name}</h1>
+
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gray-900">{service.name}</h1>
+          {isOwner && (
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate(`/services/${service.id}/edit`)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                ✏️ Edit
+              </button>
+              <button
+                onClick={handleDelete}
+                className="text-sm text-red-600 hover:underline"
+              >
+                🗑 Delete
+              </button>
+            </div>
+          )}
+        </div>
 
         {service.providerName && (
           <p className="text-sm text-gray-600">Provided by: {service.providerName}</p>

@@ -13,6 +13,9 @@ import AdminPage from './pages/AdminPage.tsx';
 import PrivateRoute from './routes/PrivateRoute';
 import RoleRoute from './routes/RoleRoute';
 import ServiceDetails from './pages/ServiceDetails';
+import MyFavorites from './pages/MyFavorites';
+import EditService from './pages/EditService';
+
 
 function App() {
   return (
@@ -28,9 +31,11 @@ function App() {
         {/* 🔐 Приватні сторінки */}
         <Route element={<PrivateRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="favorites" element={<MyFavorites />} />
           <Route path="create-service" element={<CreateService />} />
           <Route path="my-services" element={<MyServices />} />
           <Route path="my-reservations" element={<MyReservations />} />
+          <Route path="services/:id/edit" element={<EditService />} />
 
           {/* 🛡️ Ролі: тільки ADMIN */}
           <Route element={<RoleRoute allowedRoles={['ADMIN']} />}>
