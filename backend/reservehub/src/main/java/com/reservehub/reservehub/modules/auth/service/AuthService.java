@@ -28,7 +28,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phone(request.getPhone())
                 .country(request.getCountry())
-                .role(Role.CLIENT)
+                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
@@ -43,6 +43,7 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        System.out.println("LOGIN: " + request.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

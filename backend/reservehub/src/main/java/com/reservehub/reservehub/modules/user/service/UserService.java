@@ -68,4 +68,16 @@ public class UserService {
         dto.setRole(user.getRole());
         return dto;
     }
+
+    public User mapToEntity(UserDTO userDTO) {
+        return User.builder()
+                .id(userDTO.getId())
+                .email(userDTO.getEmail())
+                .name(userDTO.getName())
+                .phone(userDTO.getPhone())
+                .description(userDTO.getDescription())
+                .avatarUrl(userDTO.getAvatarUrl())
+                .role(userDTO.getRole())
+                .build();
+    }
 } 
