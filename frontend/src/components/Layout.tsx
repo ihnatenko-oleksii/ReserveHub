@@ -14,7 +14,7 @@ const Layout = () => {
     <div>
       <nav className="bg-gray-100 p-4 shadow flex justify-between items-center">
         <div className="flex gap-4 items-center">
-          <Link to="/" className="text-blue-600 hover:underline">
+          <Link to="/" className="text-blue-600 hover:underline font-semibold">
             Home
           </Link>
 
@@ -42,12 +42,33 @@ const Layout = () => {
         </div>
 
         {user && (
-          <button
-            onClick={handleLogout}
-            className="text-sm text-red-600 hover:text-red-800"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            {/* ✅ Avatar or fallback */}
+            {user.avatarUrl ? (
+              <img
+                src={user.avatarUrl}
+                alt="avatar"
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold uppercase">
+                {user.firstName?.[0] || '?'}
+              </div>
+            )}
+
+            {/* 👤 Full name */}
+            <span className="text-gray-800 text-sm font-medium">
+              {user.firstName} {user.lastName}
+            </span>
+
+            {/* 🔴 Logout */}
+            <button
+              onClick={handleLogout}
+              className="text-sm text-red-600 hover:text-red-800"
+            >
+              Logout
+            </button>
+          </div>
         )}
       </nav>
 

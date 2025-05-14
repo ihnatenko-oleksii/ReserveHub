@@ -1,13 +1,19 @@
 export interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string; // захешований у БД
-    role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
-    createdAt: string; // ISO формат, наприклад: "2025-05-07T12:34:56Z"
-    avatarUrl?: string; // не обов’язкове поле
-  }
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  country?: string;
+  description?: string;
+
+  avatarUrl?: string;
+  rating?: number;
+
+  role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  createdAt: string;
+}
+
   export interface Reservation {
     id: string;
     serviceId: string;
