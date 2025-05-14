@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import axios from '../api/axios';
 
 interface Service {
   id: number;
@@ -10,18 +11,23 @@ interface Service {
   duration: number;
   category: string;
   imageUrl?: string;
+  rating?: number;
+  likes?: number;
+  providerName?: string;
 }
 
 const ServiceDetails = () => {
   const { id } = useParams();
+  const { user, isAuthenticated } = useAuth(); // лишаємо user
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const res = await axios.get(`/api/services/${id}`);
-        setService(res.data as Service);
+        const res = await axios.get<Service>(`/services/${id}`);
+        setService(res.data);
       } catch (err) {
         console.error('Failed to load service:', err);
       } finally {
@@ -31,6 +37,15 @@ const ServiceDetails = () => {
 
     fetchService();
   }, [id]);
+
+  const handleLike = async () => {
+    try {
+      setLiked((prev) => !prev);
+      await axios.post(`/services/${id}/like`);
+    } catch (err) {
+      console.error('Failed to like service:', err);
+    }
+  };
 
   if (loading) {
     return (
@@ -59,15 +74,40 @@ const ServiceDetails = () => {
           />
         )}
         <h1 className="text-3xl font-bold text-gray-900">{service.name}</h1>
+
+        {service.providerName && (
+          <p className="text-sm text-gray-600">Provided by: {service.providerName}</p>
+        )}
+
         <p className="text-gray-600">{service.description}</p>
-        <div className="text-gray-700">
+
+        <div className="text-gray-700 space-y-1">
           <p>💰 Price: ${service.price}</p>
           <p>⏱️ Duration: {service.duration} min</p>
           <p>🗂️ Category: {service.category}</p>
+          {service.rating !== undefined && (
+            <p>⭐ Rating: {service.rating.toFixed(1)}</p>
+          )}
         </div>
-        <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-          Book Now
-        </button>
+
+        <div className="flex items-center justify-between mt-4">
+          {isAuthenticated ? (
+            <button
+              onClick={handleLike}
+              className={`flex items-center gap-1 text-sm ${
+                liked ? 'text-red-600' : 'text-gray-500'
+              }`}
+            >
+              {liked ? '❤️ Liked' : '🤍 Like'}
+            </button>
+          ) : (
+            <span className="text-sm text-gray-400 italic">Login to like</span>
+          )}
+
+          <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+            Book Now
+          </button>
+        </div>
       </div>
     </div>
   );
