@@ -1,5 +1,5 @@
 # === Java / Spring Boot ===
-/target/
+target/
 *.class
 *.jar
 *.war
