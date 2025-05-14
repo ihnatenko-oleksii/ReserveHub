@@ -1,9 +1,16 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { LoginResponse } from '../types/types';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
+import { LoginResponse, User } from '../types/types';
 
 interface AuthContextType {
-  user: LoginResponse['user'] | null;
-  login: (userData: LoginResponse['user']) => void;
+  user: User | null;
+  token: string | null;
+  login: (data: LoginResponse) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -11,18 +18,59 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<LoginResponse['user'] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  const login = (userData: LoginResponse['user']) => {
-    setUser(userData);
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const login = (data: LoginResponse) => {
+    const { token, user } = data;
+
+    // Трансформуємо fullName → firstName + lastName, якщо треба
+    const [firstName, ...rest] = user.fullName.split(' ');
+    const lastName = rest.join(' ') || '';
+
+    const adaptedUser: User = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      avatarUrl: user.avatarUrl,
+      firstName,
+      lastName,
+      createdAt: new Date().toISOString(), // тимчасово
+    };
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(adaptedUser));
+    setUser(adaptedUser);
+    setToken(token);
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        isAuthenticated: !!user && !!token,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
