@@ -26,8 +26,7 @@ export interface User {
     createdAt: string;
   }
   export interface RegisterRequest {
-    firstName: string;
-    lastName: string;
+    name: string;
     email: string;
     password: string;
     role?: 'USER'; // не передається якщо не вибрано, або дефолт на бекенді

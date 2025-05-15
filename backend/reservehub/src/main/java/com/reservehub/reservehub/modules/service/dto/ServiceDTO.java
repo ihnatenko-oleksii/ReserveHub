@@ -1,9 +1,12 @@
 package com.reservehub.reservehub.modules.service.dto;
 
 import com.reservehub.reservehub.modules.service.enums.ServiceCategory;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Builder
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class ServiceDTO {
     private Long id;
     private String name;

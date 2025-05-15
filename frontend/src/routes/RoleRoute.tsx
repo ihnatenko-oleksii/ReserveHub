@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import AccessDeniedPage from '../pages/AccessDeniedPage';
 
 interface RoleRouteProps {
-  allowedRoles: Array<'CLIENT' | 'PROVIDER' | 'ADMIN'>;
+  allowedRoles: Array<'USER' | 'ADMIN'>;
 }
 
 const RoleRoute = ({ allowedRoles }: RoleRouteProps) => {

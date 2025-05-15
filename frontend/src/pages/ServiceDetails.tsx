@@ -25,8 +25,7 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
 
-  const isOwner =
-    user?.role === 'PROVIDER' && user.id === service?.providerId;
+  const isOwner = user?.id === service?.providerId;
 
   useEffect(() => {
     const fetchService = async () => {

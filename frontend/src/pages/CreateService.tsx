@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
 const CreateService = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -34,10 +34,6 @@ const CreateService = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (user?.role !== 'PROVIDER') {
-      alert('Only providers can create services.');
-      return;
-    }
 
     try {
       const data = new FormData();

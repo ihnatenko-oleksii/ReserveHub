@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
 interface Service {
@@ -16,7 +16,7 @@ interface Service {
 const EditService = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',

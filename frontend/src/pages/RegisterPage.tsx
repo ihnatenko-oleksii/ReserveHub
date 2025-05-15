@@ -29,11 +29,16 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    const { confirmPassword, ...requestBody } = formData;
+    const { confirmPassword, firstName, lastName, ...rest } = formData;
+    const requestBody = {
+      ...rest,
+      name: `${firstName} ${lastName}`,
+    };
 
     try {
       const res = await register(requestBody as RegisterRequest);
       login(res); // ✅ зберігаємо користувача після реєстрації
+      console.log("register");
       navigate('/dashboard');
     } catch (err) {
       console.error('Registration error:', err);

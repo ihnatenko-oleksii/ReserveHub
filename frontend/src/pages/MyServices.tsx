@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext'; // 🔹 Підключаємо контекст
 
 interface Service {
   id: number;
@@ -14,10 +15,13 @@ const MyServices = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth(); // 🔹 Отримуємо залогіненого користувача
 
   const fetchServices = async () => {
+    if (!user?.id) return; // Без користувача — нічого не тягнемо
+
     try {
-      const res = await api.get<Service[]>('/services/my');
+      const res = await api.get<Service[]>(`/services/user/${user.id}`);
       setServices(res.data);
     } catch (err) {
       console.error('Failed to load services:', err);
@@ -28,7 +32,7 @@ const MyServices = () => {
 
   useEffect(() => {
     fetchServices();
-  }, []);
+  }, [user?.id]); // 🔹 Щоб працювало після логіну
 
   const handleDelete = async (id: number) => {
     const confirmDelete = confirm('Delete this service?');

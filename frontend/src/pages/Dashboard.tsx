@@ -14,7 +14,6 @@ const Dashboard = () => {
         </h1>
         <p className="text-gray-600">Role: {user.role}</p>
 
-        {user.role === 'CLIENT' && (
           <div className="space-y-4">
             <Link to="/services" className="text-blue-600 underline">
               🔍 Browse services
@@ -23,9 +22,7 @@ const Dashboard = () => {
               📋 My reservations
             </Link>
           </div>
-        )}
 
-        {user.role === 'PROVIDER' && (
           <div className="space-y-4">
             <Link to="/create-service" className="text-blue-600 underline">
               ➕ Create a new service
@@ -34,7 +31,6 @@ const Dashboard = () => {
               🛠️ Manage my services
             </Link>
           </div>
-        )}
       </div>
     </div>
   );
