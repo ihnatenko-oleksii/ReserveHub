@@ -10,7 +10,7 @@ export interface User {
   avatarUrl?: string;
   rating?: number;
 
-  role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  role: 'USER' | 'ADMIN';
   createdAt: string;
 }
 
@@ -30,7 +30,7 @@ export interface User {
     lastName: string;
     email: string;
     password: string;
-    role?: 'CLIENT' | 'PROVIDER'; // не передається якщо не вибрано, або дефолт на бекенді
+    role?: 'USER'; // не передається якщо не вибрано, або дефолт на бекенді
   }
   export interface LoginRequest {
     email: string;
@@ -42,7 +42,7 @@ export interface User {
       id: string;
       fullName: string;
       email: string;
-      role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+      role: 'USER' | 'ADMIN';
       avatarUrl?: string;
     };
   }

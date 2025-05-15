@@ -1,6 +1,7 @@
 package com.reservehub.reservehub.modules.auth.service;
 
 import com.reservehub.reservehub.modules.auth.dto.AuthResponse;
+import com.reservehub.reservehub.modules.auth.dto.AuthUserResponse;
 import com.reservehub.reservehub.modules.auth.dto.LoginRequest;
 import com.reservehub.reservehub.modules.auth.dto.RegisterRequest;
 import com.reservehub.reservehub.modules.user.entity.User;
@@ -36,9 +37,15 @@ public class AuthService {
 
         return AuthResponse.builder()
                 .token(jwtToken)
-                .userId(user.getId())
-                .name(user.getName())
-                .role(user.getRole())
+                .user(
+                        AuthUserResponse.builder()
+                                .id(user.getId())
+                                .fullName(user.getName())
+                                .email(user.getEmail())
+                                .role(user.getRole())
+                                .avatarUrl(user.getAvatarUrl())
+                                .build()
+                )
                 .build();
     }
 
@@ -58,17 +65,29 @@ public class AuthService {
 
         return AuthResponse.builder()
                 .token(jwtToken)
-                .userId(user.getId())
-                .name(user.getName())
-                .role(user.getRole())
+                .user(
+                        AuthUserResponse.builder()
+                                .id(user.getId())
+                                .fullName(user.getName())
+                                .email(user.getEmail())
+                                .role(user.getRole())
+                                .avatarUrl(user.getAvatarUrl())
+                                .build()
+                )
                 .build();
     }
 
     public AuthResponse getCurrentUser(User user) {
         return AuthResponse.builder()
-                .userId(user.getId())
-                .name(user.getName())
-                .role(user.getRole())
+                .user(
+                        AuthUserResponse.builder()
+                                .id(user.getId())
+                                .fullName(user.getName())
+                                .email(user.getEmail())
+                                .role(user.getRole())
+                                .avatarUrl(user.getAvatarUrl())
+                                .build()
+                )
                 .build();
     }
 } 
