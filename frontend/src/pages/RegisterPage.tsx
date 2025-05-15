@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../utils/auth';
 import { RegisterRequest } from '../types/types';
+import { useAuth } from '../context/AuthContext';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const RegisterPage: React.FC = () => {
     confirmPassword: '',
   });
 
+  const { login } = useAuth(); // ✅ додаємо login з контексту
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +32,9 @@ const RegisterPage: React.FC = () => {
     const { confirmPassword, ...requestBody } = formData;
 
     try {
-      await register(requestBody as RegisterRequest);
-      navigate('/dashboard'); // або на /login, як хочеш
+      const res = await register(requestBody as RegisterRequest);
+      login(res); // ✅ зберігаємо користувача після реєстрації
+      navigate('/dashboard');
     } catch (err) {
       console.error('Registration error:', err);
       alert('Registration failed');

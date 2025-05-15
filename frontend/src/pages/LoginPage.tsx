@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../utils/auth';
+import { login as loginApi } from '../utils/auth';
 import { LoginRequest } from '../types/types';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<LoginRequest>({
@@ -10,6 +11,7 @@ const LoginPage: React.FC = () => {
   });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,10 +21,11 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(formData);
+      const response = await loginApi(formData);
+      login(response); // ✅ зберігаємо user у контексті
       console.log('Logged in:', response.user);
-      // TODO: зберегти токен або контекст авторизації
-      navigate('/dashboard'); // або інша сторінка після входу
+
+      navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       alert('Login failed. Please check your credentials.');

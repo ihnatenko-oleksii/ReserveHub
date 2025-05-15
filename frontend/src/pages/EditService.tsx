@@ -70,10 +70,6 @@ const EditService = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (user?.role !== 'PROVIDER') {
-      alert('Only providers can edit services.');
-      return;
-    }
 
     try {
       const data = new FormData();
