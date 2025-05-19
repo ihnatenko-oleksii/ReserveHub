@@ -21,6 +21,7 @@ public class ServiceService {
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<ServiceDTO> getAllServices(ServiceFilterDTO filter) {
         List<Service> services = serviceRepository.findWithFilters(
                 filter.getCategory(),
@@ -34,12 +35,14 @@ public class ServiceService {
         return services.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ServiceDTO getServiceById(Long id) {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException("Service not found with id: " + id));
         return mapToDTO(service);
     }
 
+    @Transactional(readOnly = true)
     public List<ServiceDTO> getServicesByUserId(Long userId) {
         return serviceRepository.findByOwnerId(userId).stream()
                 .map(this::mapToDTO)

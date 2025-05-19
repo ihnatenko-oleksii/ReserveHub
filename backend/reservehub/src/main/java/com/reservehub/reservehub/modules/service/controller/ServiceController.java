@@ -6,6 +6,7 @@ import com.reservehub.reservehub.modules.service.dto.ServiceFilterDTO;
 import com.reservehub.reservehub.modules.service.enums.ServiceCategory;
 import com.reservehub.reservehub.modules.service.service.ServiceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,11 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/services")
 @RequiredArgsConstructor
 public class ServiceController {
     private final ServiceService serviceService;
+
 
     @GetMapping
     public ResponseEntity<List<ServiceDTO>> getAllServices(ServiceFilterDTO filter) {
@@ -32,6 +35,7 @@ public class ServiceController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ServiceDTO>> getServicesByUserId(@PathVariable Long userId) {
+        log.info("getServicesByUserId {}", userId);
         return ResponseEntity.ok(serviceService.getServicesByUserId(userId));
     }
 
