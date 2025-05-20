@@ -31,7 +31,7 @@ public class MessageService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Message message = new Message();
-        message.setChatRoom(chatRoom);
+        message.setRoom(chatRoom);
         message.setSender(sender);
         message.setContent(messageDTO.getContent());
 
@@ -48,7 +48,7 @@ public class MessageService {
         }
 
         // Get messages and convert to DTOs
-        return messageRepository.findAllByRoomIdOrderBySentAtAsc(roomId)
+        return messageRepository.findAllByRoom_IdOrderBySentAtAsc(roomId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -57,7 +57,7 @@ public class MessageService {
     private MessageDTO convertToDTO(Message message) {
         MessageDTO dto = new MessageDTO();
         dto.setId(message.getId());
-        dto.setRoomId(message.getChatRoom().getId());
+        dto.setRoomId(message.getRoom().getId());
         dto.setSenderId(message.getSender().getId());
         dto.setContent(message.getContent());
         dto.setSentAt(message.getSentAt());

@@ -55,6 +55,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/chat/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/invoices/**").hasAnyRole("USER", "ADMIN")
 
+                        .requestMatchers("/ws-chat/**").permitAll()
+
                         // Wszystko inne – wymaga zalogowania
                         .anyRequest().authenticated()
                 )
