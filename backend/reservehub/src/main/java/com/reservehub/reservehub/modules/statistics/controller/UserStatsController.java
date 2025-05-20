@@ -27,29 +27,27 @@ public class UserStatsController {
         return ResponseEntity.ok(userStatsService.getUserStatsSummary(user));
     }
 
-    @GetMapping("/revenue-by-month")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue(@CurrentUser User user) {
-        return ResponseEntity.ok(userStatsService.getMonthlyRevenue(user));
-    }
-
-    @GetMapping("/top-services")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<TopServiceDTO>> getTopServices(@CurrentUser User user) {
-        return ResponseEntity.ok(userStatsService.getTopServices(user));
-    }
+//    @GetMapping("/revenue-by-month")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue(@CurrentUser User user) {
+//        return ResponseEntity.ok(userStatsService.getMonthlyRevenue(user));
+//    }
+//
+//    @GetMapping("/top-services")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<List<TopServiceDTO>> getTopServices(@CurrentUser User user) {
+//        return ResponseEntity.ok(userStatsService.getTopServices(user));
+//    }
 
     @GetMapping("/export")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<String> exportUserData(@CurrentUser User user) {
         String csvContent = statisticsExportService.exportUserReservationsToCsv(user);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);
-        headers.setContentDispositionFormData("attachment", "user_reservations.csv");
-        
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(csvContent);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reservations_" + user.getId() + ".csv");
+
+        return ResponseEntity.ok().headers(headers).body(csvContent);
     }
 } 

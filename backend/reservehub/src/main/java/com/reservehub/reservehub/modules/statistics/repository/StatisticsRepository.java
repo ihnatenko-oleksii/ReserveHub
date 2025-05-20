@@ -1,10 +1,11 @@
 package com.reservehub.reservehub.modules.statistics.repository;
 
-import com.reservehub.reservehub.modules.user.entity.User;
 import com.reservehub.reservehub.modules.invoice.enums.InvoiceStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import com.reservehub.reservehub.modules.reservation.enums.ReservationStatus;
+import com.reservehub.reservehub.modules.user.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -12,37 +13,62 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface StatisticsRepository extends JpaRepository<Object, Long> {
-    
-    @Query("SELECT COUNT(s) FROM Service s WHERE s.provider = :user")
-    Long countServicesByProvider(@Param("user") User user);
+public class StatisticsRepository {
 
-    @Query("SELECT COUNT(r) FROM Reservation r WHERE r.client = :user")
-    Long countReservationsByClient(@Param("user") User user);
+    @PersistenceContext
+    private EntityManager em;
 
-    @Query("SELECT COUNT(r) FROM Reservation r WHERE r.client = :user AND r.status = :status")
-    Long countReservationsByClientAndStatus(@Param("user") User user, @Param("status") String status);
+    public Long countServicesByProvider(User user) {
+        return em.createQuery(
+                        "SELECT COUNT(s) FROM Service s WHERE s.owner = :user", Long.class)
+                .setParameter("user", user)
+                .getSingleResult();
+    }
 
-    @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE i.provider = :user AND i.status = :status")
-    BigDecimal calculateTotalRevenueByProviderAndStatus(@Param("user") User user, @Param("status") InvoiceStatus status);
+    public Long countReservationsByClient(User user) {
+        return em.createQuery(
+                        "SELECT COUNT(r) FROM Reservation r WHERE r.user = :user", Long.class)
+                .setParameter("user", user)
+                .getSingleResult();
+    }
 
-    @Query("SELECT new map(FUNCTION('DATE_FORMAT', i.createdAt, '%Y-%m') as month, SUM(i.totalAmount) as total) " +
-           "FROM Invoice i WHERE i.provider = :user AND i.status = :status AND i.createdAt >= :startDate " +
-           "GROUP BY FUNCTION('DATE_FORMAT', i.createdAt, '%Y-%m') ORDER BY month")
-    List<Object[]> findMonthlyRevenueByProviderAndStatus(
-        @Param("user") User user,
-        @Param("status") InvoiceStatus status,
-        @Param("startDate") LocalDate startDate
-    );
+    public Long countReservationsByClientAndStatus(User user, ReservationStatus status) {
+        return em.createQuery(
+                        "SELECT COUNT(r) FROM Reservation r WHERE r.user = :user AND r.status = :status", Long.class)
+                .setParameter("user", user)
+                .setParameter("status", status)
+                .getSingleResult();
+    }
 
-    @Query("SELECT new map(s.id as serviceId, s.name as serviceName, " +
-           "COUNT(r) as reservationCount, SUM(i.totalAmount) as totalRevenue) " +
-           "FROM Service s LEFT JOIN Reservation r ON r.service = s " +
-           "LEFT JOIN Invoice i ON i.reservation = r " +
-           "WHERE s.provider = :user AND i.status = :status " +
-           "GROUP BY s.id, s.name ORDER BY reservationCount DESC")
-    List<Object[]> findTopServicesByProvider(
-        @Param("user") User user,
-        @Param("status") InvoiceStatus status
-    );
-} 
+    public BigDecimal calculateTotalRevenueByProviderAndStatus(User user, InvoiceStatus status) {
+        return em.createQuery(
+                        "SELECT COALESCE(SUM(i.amount), 0) FROM Invoice i WHERE i.provider = :user AND i.status = :status", BigDecimal.class)
+                .setParameter("user", user)
+                .setParameter("status", status)
+                .getSingleResult();
+    }
+
+    public List<Object[]> findMonthlyRevenueByProviderAndStatus(User user, InvoiceStatus status, LocalDate startDate) {
+        return em.createQuery(
+                        "SELECT FUNCTION('TO_CHAR', i.createdAt, 'YYYY-MM') as month, SUM(i.amount) as total " +
+                                "FROM Invoice i WHERE i.provider = :user AND i.status = :status AND i.createdAt >= :startDate " +
+                                "GROUP BY FUNCTION('TO_CHAR', i.createdAt, 'YYYY-MM') ORDER BY month", Object[].class)
+                .setParameter("user", user)
+                .setParameter("status", status)
+                .setParameter("startDate", startDate)
+                .getResultList();
+    }
+
+    public List<Object[]> findTopServicesByProvider(User user, InvoiceStatus status, int limit) {
+        return em.createQuery(
+                        "SELECT s.id, s.name, COUNT(r), COALESCE(SUM(i.amount), 0) " +
+                                "FROM Service s LEFT JOIN Reservation r ON r.service = s " +
+                                "LEFT JOIN Invoice i ON i.reservation = r " +
+                                "WHERE s.owner = :user AND i.status = :status " +
+                                "GROUP BY s.id, s.name ORDER BY COUNT(r) DESC", Object[].class)
+                .setParameter("user", user)
+                .setParameter("status", status)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+}

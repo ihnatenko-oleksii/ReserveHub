@@ -18,6 +18,7 @@ public class Invoice {
     private Long id;
 
     @OneToOne
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id")
     private Reservation reservation;
 
     @ManyToOne
