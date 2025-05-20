@@ -1,7 +1,7 @@
 package com.reservehub.reservehub.modules.statistics.repository;
 
 import com.reservehub.reservehub.modules.user.entity.User;
-import com.reservehub.reservehub.modules.invoice.entity.InvoiceStatus;
+import com.reservehub.reservehub.modules.invoice.enums.InvoiceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
