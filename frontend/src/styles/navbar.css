@@ -1,0 +1,145 @@
+.navbar {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .navbar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    flex-wrap: wrap;
+  }
+  
+  .navbar-logo {
+    height: 40px;
+  }
+  
+  .navbar-left,
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .navbar-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .navbar-search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+  }
+  
+  .navbar-link {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .navbar-link:hover {
+    text-decoration: underline;
+  }
+  
+  .navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .navbar-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+  
+  .navbar-avatar-fallback {
+    width: 32px;
+    height: 32px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+  
+  .navbar-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .navbar-manage {
+    font-size: 13px;
+    color: #4b5563;
+    text-decoration: underline;
+  }
+  
+  .navbar-bottom {
+    padding: 8px 24px;
+    background-color: #f9fafb;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .navbar-category {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+  }
+  .full-width-navbar {
+    width: 100vw;           /* повна ширина viewport */
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .navbar-categories-container {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 16px 24px;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+  }
+  
+  .navbar-category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 72px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1f2937;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .navbar-category-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .navbar-category-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 6px;
+  }
+  
+  .navbar-category-label {
+    text-align: center;
+  }
+    
