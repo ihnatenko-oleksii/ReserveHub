@@ -15,6 +15,8 @@ import RoleRoute from './routes/RoleRoute';
 import ServiceDetails from './pages/ServiceDetails';
 import MyFavorites from './pages/MyFavorites';
 import EditService from './pages/EditService';
+import ProfileEdit from './pages/ProfileEdit';
+
 
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
           <Route path="my-services" element={<MyServices />} />
           <Route path="my-reservations" element={<MyReservations />} />
           <Route path="services/:id/edit" element={<EditService />} />
+          <Route path="profile" element={<ProfileEdit />} />
+
 
           {/* 🛡️ Ролі: тільки ADMIN */}
           <Route element={<RoleRoute allowedRoles={['ADMIN']} />}>
