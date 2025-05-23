@@ -13,6 +13,7 @@ interface AuthContextType {
   login: (data: LoginResponse) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -29,23 +31,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     }
+
+    setIsLoading(false);
   }, []);
 
   const login = (data: LoginResponse) => {
+    console.log("function login start");
     const { token, user } = data;
-
-    // Трансформуємо fullName → firstName + lastName, якщо треба
-    const [firstName, ...rest] = user.fullName.split(' ');
+    console.log('🔥 login → user =', user);
+    const [firstName, ...rest] = user.name.split(' ');
     const lastName = rest.join(' ') || '';
 
-    const adaptedUser: User = {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      avatarUrl: user.avatarUrl,
-      firstName,
-      lastName,
-      createdAt: new Date().toISOString(), // тимчасово
+
+        const adaptedUser: User = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        description: user.description,
+        avatarUrl: user.avatarUrl || '',
+        rating: user.rating ?? 0,
+        role: user.role,
+        createdAt: user.createdAt || new Date().toISOString(),
+        firstName,
+        lastName,
     };
 
     localStorage.setItem('token', token);
@@ -69,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         logout,
         isAuthenticated: !!user && !!token,
+        isLoading
       }}
     >
       {children}

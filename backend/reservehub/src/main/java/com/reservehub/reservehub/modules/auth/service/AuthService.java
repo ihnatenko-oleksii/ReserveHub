@@ -40,7 +40,7 @@ public class AuthService {
                 .user(
                         AuthUserResponse.builder()
                                 .id(user.getId())
-                                .fullName(user.getName())
+                                .name(user.getName())
                                 .email(user.getEmail())
                                 .role(user.getRole())
                                 .avatarUrl(user.getAvatarUrl())
@@ -50,7 +50,6 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        System.out.println("LOGIN: " + request.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -63,13 +62,17 @@ public class AuthService {
 
         var jwtToken = jwtService.generateToken(user);
 
+        System.out.println("LOGIN: " + request.getEmail());
+
         return AuthResponse.builder()
                 .token(jwtToken)
                 .user(
                         AuthUserResponse.builder()
                                 .id(user.getId())
-                                .fullName(user.getName())
+                                .name(user.getName())
                                 .email(user.getEmail())
+                                .phone(user.getPhone())
+                                .description(user.getDescription())
                                 .role(user.getRole())
                                 .avatarUrl(user.getAvatarUrl())
                                 .build()
@@ -82,7 +85,7 @@ public class AuthService {
                 .user(
                         AuthUserResponse.builder()
                                 .id(user.getId())
-                                .fullName(user.getName())
+                                .name(user.getName())
                                 .email(user.getEmail())
                                 .role(user.getRole())
                                 .avatarUrl(user.getAvatarUrl())

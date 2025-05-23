@@ -3,29 +3,40 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { User } from '../types/types';
 
+const splitFullName = (fullName: string) => {
+  const [firstName, ...rest] = fullName.trim().split(' ');
+  const lastName = rest.join(' ');
+  return { firstName, lastName };
+};
+
 const ProfileEdit = () => {
   const { user, login } = useAuth();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     phone: '',
+    description: '',
     avatar: null as File | null,
   });
+
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
+      const { firstName, lastName } = splitFullName(user.name || '');
       setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
+        firstName,
+        lastName,
         phone: user.phone || '',
+        description: user.description || '',
         avatar: null,
       });
       setPreview(user.avatarUrl || null);
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -44,21 +55,30 @@ const ProfileEdit = () => {
 
     try {
       const data = new FormData();
-      data.append('firstName', formData.firstName);
-      data.append('lastName', formData.lastName);
-      data.append('phone', formData.phone);
-      if (formData.avatar) data.append('avatar', formData.avatar);
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
 
-      const res = await api.put<User>(`/api/users/${user.id}`, data, {
+      data.append('name', fullName);
+      data.append('phone', formData.phone);
+      data.append('description', formData.description);
+      if (formData.avatar) {
+        data.append('avatar', formData.avatar);
+      }
+
+      const res = await api.put<User>(`/users/${user.id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const updatedUser = {
-        ...res.data,
-        fullName: `${res.data.firstName} ${res.data.lastName}`,
-      };
+      const { firstName, lastName } = splitFullName(res.data.name || '');
 
-      login({ token: localStorage.getItem('token')!, user: updatedUser });
+      login({
+        token: localStorage.getItem('token')!,
+        user: {
+          ...res.data,
+          firstName,
+          lastName,
+        },
+      });
+
       alert('Profile updated!');
     } catch (err) {
       console.error('Failed to update profile:', err);
@@ -109,6 +129,16 @@ const ProfileEdit = () => {
             type="text"
             name="phone"
             value={formData.phone}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
           />

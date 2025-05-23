@@ -8,8 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,17 +37,34 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(Long id, String name, String phone, String description, MultipartFile avatar) throws IOException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        
-        user.setName(userDTO.getName());
-        user.setPhone(userDTO.getPhone());
-        user.setDescription(userDTO.getDescription());
-        user.setAvatarUrl(userDTO.getAvatarUrl());
-        
+
+        user.setName(name);
+        user.setPhone(phone);
+        user.setDescription(description);
+
+        if (avatar != null && !avatar.isEmpty()) {
+            String oldAvatarUrl = user.getAvatarUrl();
+            if (oldAvatarUrl != null && oldAvatarUrl.startsWith("/uploads/avatars/")) {
+                Path oldPath = Paths.get("uploads/avatars", Path.of(oldAvatarUrl).getFileName().toString());
+                Files.deleteIfExists(oldPath);
+            }
+
+            String filename = UUID.randomUUID() + "_" + avatar.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads/avatars");
+            Files.createDirectories(uploadPath);
+
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            user.setAvatarUrl("/uploads/avatars/" + filename);
+        }
+
         return mapToDTO(userRepository.save(user));
     }
+
 
     @Transactional
     public void deleteUser(Long id) {

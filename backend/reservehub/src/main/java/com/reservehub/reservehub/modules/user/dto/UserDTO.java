@@ -1,6 +1,7 @@
 package com.reservehub.reservehub.modules.user.dto;
 
 import com.reservehub.reservehub.modules.user.enums.Role;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
