@@ -22,12 +22,13 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await loginApi(formData);
-      login(response); // ✅ зберігаємо user у контексті
+      console.log(response);
+      login(response);
       console.log('Logged in:', response.user);
 
       navigate('/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
+      console.log('Login error details:', JSON.stringify(err, null, 2));
       alert('Login failed. Please check your credentials.');
     }
   };
