@@ -3,6 +3,8 @@ package com.reservehub.reservehub.modules.service.dto;
 import com.reservehub.reservehub.modules.service.enums.ServiceCategory;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -18,4 +20,6 @@ public class ServiceDTO {
     private Integer likes;
     private Long ownerId;
     private String ownerName;
+
+    private List<ServiceImageDTO> images;
 } 

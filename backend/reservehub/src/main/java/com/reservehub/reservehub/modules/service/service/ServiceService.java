@@ -2,17 +2,25 @@ package com.reservehub.reservehub.modules.service.service;
 
 import com.reservehub.reservehub.modules.service.dto.ServiceDTO;
 import com.reservehub.reservehub.modules.service.dto.ServiceFilterDTO;
+import com.reservehub.reservehub.modules.service.dto.ServiceImageDTO;
 import com.reservehub.reservehub.modules.service.entity.Service;
+import com.reservehub.reservehub.modules.service.entity.ServiceImage;
+import com.reservehub.reservehub.modules.service.repository.ServiceImageRepository;
 import com.reservehub.reservehub.modules.service.repository.ServiceRepository;
 import com.reservehub.reservehub.modules.user.entity.User;
 import com.reservehub.reservehub.modules.user.repository.UserRepository;
 import com.reservehub.reservehub.modules.service.exception.ServiceNotFoundException;
+import com.reservehub.reservehub.modules.utils.files.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
@@ -20,6 +28,10 @@ import java.util.stream.Collectors;
 public class ServiceService {
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
+    private final ServiceImageRepository serviceImageRepository;
+
+    private final FileStorageService fileStorageService;
+
 
     @Transactional(readOnly = true)
     public List<ServiceDTO> getAllServices(ServiceFilterDTO filter) {
@@ -61,15 +73,33 @@ public class ServiceService {
         return mapToDTO(serviceRepository.save(service));
     }
 
+    // ServiceService.java
+
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @serviceService.isOwner(#id, authentication.principal.id)")
-    public ServiceDTO updateService(Long id, ServiceDTO serviceDTO) {
+    public ServiceDTO updateService(Long id, ServiceDTO serviceDTO, List<MultipartFile> images) {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException("Service not found with id: " + id));
-        
+
         updateServiceFromDTO(service, serviceDTO);
+
+        serviceImageRepository.deleteByService(service);
+
+        List<ServiceImage> savedImages = new ArrayList<>();
+        for (MultipartFile file : images) {
+            String url = fileStorageService.storeFile(file);
+            ServiceImage image = ServiceImage.builder()
+                    .imageUrl(url)
+                    .service(service)
+                    .build();
+            savedImages.add(image);
+        }
+        serviceImageRepository.saveAll(savedImages);
+
         return mapToDTO(serviceRepository.save(service));
     }
+
+
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @serviceService.isOwner(#id, authentication.principal.id)")
@@ -87,6 +117,14 @@ public class ServiceService {
     }
 
     private ServiceDTO mapToDTO(Service service) {
+        List<ServiceImageDTO> imageDTOs = Optional.ofNullable(service.getImages())
+                .orElse(Collections.emptyList()).stream()
+                .map(image -> ServiceImageDTO.builder()
+                        .id(image.getId())
+                        .imageUrl(image.getImageUrl())
+                        .build())
+                .toList();
+
         ServiceDTO dto = new ServiceDTO();
         dto.setId(service.getId());
         dto.setName(service.getName());
@@ -98,6 +136,7 @@ public class ServiceService {
         dto.setLikes(service.getLikes());
         dto.setOwnerId(service.getOwner().getId());
         dto.setOwnerName(service.getOwner().getName());
+        dto.setImages(imageDTOs);
         return dto;
     }
 

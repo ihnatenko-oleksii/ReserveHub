@@ -55,8 +55,8 @@
   }
   
   .navbar-avatar {
-    width: 32px;
-    height: 32px;
+    width: 45px;
+    height: 45px;
     border-radius: 9999px;
     object-fit: cover;
   }
@@ -80,9 +80,8 @@
   }
   
   .navbar-manage {
-    font-size: 13px;
-    color: #4b5563;
-    text-decoration: underline;
+    font-size: 15px;
+    color: #292b2c;
   }
   
   .navbar-bottom {
@@ -127,7 +126,6 @@
     cursor: pointer;
     transition: transform 0.2s ease;
   }
-  
   .navbar-category-card:hover {
     transform: scale(1.05);
   }
@@ -137,6 +135,14 @@
     height: 48px;
     object-fit: contain;
     margin-bottom: 6px;
+  }
+
+  .navbar-icon{
+    transition: transform 0.2s ease;
+  }
+
+  .navbar-icon:hover {
+    transform: scale(1.07);
   }
   
   .navbar-category-label {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { User } from '../types/types';
+import { useToast } from '../hooks/useToast';
 
 const splitFullName = (fullName: string) => {
   const [firstName, ...rest] = fullName.trim().split(' ');
@@ -11,7 +12,7 @@ const splitFullName = (fullName: string) => {
 
 const ProfileEdit = () => {
   const { user, login } = useAuth();
-
+  const showToast = useToast();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -80,16 +81,16 @@ const ProfileEdit = () => {
         },
       });
 
-      alert('Profile updated!');
+      showToast('Profile updated!');
     } catch (err) {
       console.error('Failed to update profile:', err);
-      alert('Update failed.');
+      showToast('Update failed.');
     }
   };
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Edit Profile</h2>
+      <h2 className="text-2xl text-center font-bold mb-6 text-gray-800">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col items-center gap-4">
           <img

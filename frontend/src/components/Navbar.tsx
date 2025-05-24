@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
 import '../styles/navbar.css';
 
 const categories = [
@@ -17,6 +18,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const initials = user?.firstName?.[0] || '?';
   const avatarUrl = `http://localhost:8080/avatars/${user?.avatarUrl}`;
+
+  const [query, setQuery] = useState('');
   
   const handleLogout = () => {
     logout();
@@ -40,9 +43,25 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search services or categories..."
-            className="navbar-search-input"
+            className="navbar-search-input pl-10"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
           />
+          <Link to={`/?text=${encodeURIComponent(query)}`} className="navbar-link navbar-icon ml-3 mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="gray"
+            viewBox="0 0 16 16"
+            className=""
+          >
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+          </svg>
+          </Link>
+          
         </div>
+
 
         <div className="navbar-right">
           {!user ? (
@@ -62,10 +81,10 @@ const Navbar = () => {
                 <div className="navbar-avatar-fallback">{initials}</div>
               )}
               <div className="navbar-user-info">
-                <span className="navbar-name">
-                  {user.firstName} {user.lastName}
-                </span>
-                <Link to="/profile" className="navbar-manage">Manage Profile</Link>
+                {/* <span className="navbar-name">
+                  
+                </span> */}
+                <Link to="/profile" className="navbar-manage">{user.firstName} {user.lastName}</Link>
                 <button onClick={handleLogout} className="navbar-logout">Logout</button>
               </div>
             </div>
@@ -73,7 +92,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Нижній рядок */}
       <div className="navbar-categories-container">
         {categories.map((cat) => (
           <div key={cat.name} className="navbar-category-card">

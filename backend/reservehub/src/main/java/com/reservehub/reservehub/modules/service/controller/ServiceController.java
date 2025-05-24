@@ -68,9 +68,28 @@ public class ServiceController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ServiceDTO> updateService(
             @PathVariable Long id,
-            @RequestBody ServiceDTO serviceDTO) {
-        return ResponseEntity.ok(serviceService.updateService(id, serviceDTO));
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam Double price,
+            @RequestParam Integer duration,
+            @RequestParam ServiceCategory category,
+            @RequestParam(required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal UserPrincipal user) {
+
+        ServiceDTO serviceDTO = ServiceDTO.builder()
+                .name(name)
+                .description(description)
+                .price(price)
+                .duration(duration)
+                .category(category)
+                .ownerId(user.getId())
+                .build();
+
+        return ResponseEntity.ok(serviceService.updateService(id, serviceDTO, images != null ? images : List.of()));
     }
+
+
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")

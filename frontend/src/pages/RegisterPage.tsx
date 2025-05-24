@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../utils/auth';
 import { RegisterRequest } from '../types/types';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../hooks/useToast';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,9 @@ const RegisterPage: React.FC = () => {
   const { login } = useAuth(); // ✅ додаємо login з контексту
   const navigate = useNavigate();
 
+
+  const showToast = useToast();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -25,7 +29,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      showToast('Passwords do not match');
       return;
     }
 
@@ -42,7 +46,7 @@ const RegisterPage: React.FC = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('Registration error:', err);
-      alert('Registration failed');
+      showToast('Registration failed');
     }
   };
 

@@ -13,8 +13,8 @@ interface Service {
   imageUrl?: string;
   rating?: number;
   likes?: number;
-  providerName?: string;
-  providerId: string;
+  ownerName?: string;
+  ownerId: string;
 }
 
 const ServiceDetails = () => {
@@ -25,7 +25,8 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
 
-  const isOwner = user?.id === service?.providerId;
+  const isOwner = user?.id === service?.ownerId;
+  console.log('Service owner:', service);
 
   useEffect(() => {
     const fetchService = async () => {
@@ -111,8 +112,8 @@ const ServiceDetails = () => {
           )}
         </div>
 
-        {service.providerName && (
-          <p className="text-sm text-gray-600">Provided by: {service.providerName}</p>
+        {service.ownerName && (
+          <p className="text-sm text-gray-600">Provided by: {service.ownerName}</p>
         )}
 
         <p className="text-gray-600">{service.description}</p>

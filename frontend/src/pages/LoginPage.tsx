@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login as loginApi } from '../utils/auth';
 import { LoginRequest } from '../types/types';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../hooks/useToast';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<LoginRequest>({
@@ -12,6 +13,8 @@ const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  const showToast = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,7 +32,7 @@ const LoginPage: React.FC = () => {
       navigate('/dashboard');
     } catch (err) {
       console.log('Login error details:', JSON.stringify(err, null, 2));
-      alert('Login failed. Please check your credentials.');
+      showToast('Login failed. Please check your credentials.');
     }
   };
 

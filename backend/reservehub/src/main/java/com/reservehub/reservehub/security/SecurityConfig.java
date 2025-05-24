@@ -42,8 +42,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Publiczne
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/avatars/**").permitAll()
+                        .requestMatchers("/services_photos/**").permitAll()
 
                         // Tylko dla ADMINA
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

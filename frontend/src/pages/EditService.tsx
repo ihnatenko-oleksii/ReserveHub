@@ -16,7 +16,6 @@ interface Service {
 const EditService = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  // const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,9 +23,10 @@ const EditService = () => {
     price: '',
     duration: '',
     category: '',
-    image: null as File | null,
+    images: [] as File[],
   });
 
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const EditService = () => {
           price: service.price.toString(),
           duration: service.duration.toString(),
           category: service.category,
-          image: null,
+          images: [],
         });
       } catch (err) {
         console.error('Failed to load service:', err);
@@ -62,14 +62,32 @@ const EditService = () => {
     }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({ ...prev, image: file }));
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...files],
+    }));
+    setImagePreviews((prev) => [...prev, ...newPreviews]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => {
+      const updatedImages = [...prev.images];
+      updatedImages.splice(index, 1);
+      return { ...prev, images: updatedImages };
+    });
+    setImagePreviews((prev) => {
+      const updatedPreviews = [...prev];
+      updatedPreviews.splice(index, 1);
+      return updatedPreviews;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
 
     try {
       const data = new FormData();
@@ -78,9 +96,7 @@ const EditService = () => {
       data.append('price', formData.price.toString());
       data.append('duration', formData.duration.toString());
       data.append('category', formData.category);
-      if (formData.image) {
-        data.append('image', formData.image);
-      }
+      formData.images.forEach((img) => data.append('images', img)); // `images` jako lista
 
       await api.put(`/services/${id}`, data, {
         headers: {
@@ -88,7 +104,7 @@ const EditService = () => {
         },
       });
 
-      navigate('/dashboard'); // або на сторінку сервісу
+      navigate('/dashboard');
     } catch (err) {
       console.error('Failed to update service:', err);
       alert('Failed to update service');
@@ -96,22 +112,16 @@ const EditService = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Loading...
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div className="flex items-center justify-center bg-gray-50 px-4 py-8" style={{ minHeight: '85vh' }}>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 shadow rounded w-full max-w-lg space-y-4"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-800">
-          Edit Service
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800">Edit Service</h2>
 
         <input
           type="text"
@@ -172,9 +182,25 @@ const EditService = () => {
         <input
           type="file"
           accept="image/*"
-          onChange={handleFileChange}
+          multiple
+          onChange={handleFilesChange}
           className="w-full"
         />
+
+        <div className="flex flex-wrap gap-2">
+          {imagePreviews.map((src, i) => (
+            <div key={i} className="relative">
+              <img src={src} alt={`Preview ${i}`} className="w-24 h-24 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(i)}
+                className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-1 rounded-full"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
 
         <button
           type="submit"
