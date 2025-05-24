@@ -16,7 +16,8 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const initials = user?.firstName?.[0] || '?';
-
+  const avatarUrl = `http://localhost:8080/avatars/${user?.avatarUrl}`;
+  
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -53,7 +54,7 @@ const Navbar = () => {
             <div className="navbar-user">
               {user.avatarUrl ? (
                 <img
-                  src={user.avatarUrl}
+                  src={avatarUrl}
                   alt="avatar"
                   className="navbar-avatar"
                 />

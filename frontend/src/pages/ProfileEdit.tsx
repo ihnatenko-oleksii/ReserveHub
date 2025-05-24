@@ -32,7 +32,8 @@ const ProfileEdit = () => {
         description: user.description || '',
         avatar: null,
       });
-      setPreview(user.avatarUrl || null);
+      const avatarUrl = `http://localhost:8080/avatars/${user.avatarUrl}`;
+      setPreview(avatarUrl || null);
     }
   }, [user]);
 

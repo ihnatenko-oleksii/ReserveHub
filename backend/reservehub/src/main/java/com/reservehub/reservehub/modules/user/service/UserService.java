@@ -59,7 +59,7 @@ public class UserService {
             Path filePath = uploadPath.resolve(filename);
             Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            user.setAvatarUrl("/uploads/avatars/" + filename);
+            user.setAvatarUrl(filename);
         }
 
         return mapToDTO(userRepository.save(user));
