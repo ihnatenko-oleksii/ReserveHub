@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-16">
         <div className="flex items-center justify-center mb-16">
-          <img src="/logo.png" alt="ReserveHub Logo" className="h-16 w-16 mr-4" />
+          <img src="/logo_transparent.png" alt="ReserveHub Logo" className="h-24 w-24 mr-4" />
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               Welcome to ReserveHub
