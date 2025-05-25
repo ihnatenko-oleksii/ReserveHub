@@ -1,22 +1,33 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import Toast from '../components/Toast';
+import Toast from '../components/Toast.tsx';
 
-const ToastContext = createContext<(message: string) => void>(() => {});
+type ToastType = 'success' | 'error' | 'info';
+
+interface ToastState {
+  message: string;
+  type?: ToastType;
+}
+
+const ToastContext = createContext<(message: string, type?: ToastType) => void>(() => {});
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<ToastState | null>(null);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
+  const showToast = (message: string, type: ToastType = 'info') => {
+    setToast({ message, type });
   };
 
   return (
-    <ToastContext.Provider value={showToast}>
-      {children}
-      {toastMessage && (
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
-      )}
-    </ToastContext.Provider>
+      <ToastContext.Provider value={showToast}>
+        {children}
+        {toast && (
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast(null)}
+            />
+        )}
+      </ToastContext.Provider>
   );
 };
 

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../styles/navbar.css';
 
 const categories = [
@@ -16,6 +17,7 @@ const categories = [
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const initials = user?.firstName?.[0] || '?';
   const avatarUrl = `http://localhost:8080/avatars/${user?.avatarUrl}`;
 
@@ -92,14 +94,21 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-categories-container">
-        {categories.map((cat) => (
-          <div key={cat.name} className="navbar-category-card">
-            <img src={cat.icon} alt={cat.name} className="navbar-category-icon" />
-            <span className="navbar-category-label">{cat.name}</span>
+      {location.pathname === '/' && (
+          <div className="navbar-categories-container">
+            {categories.map((cat) => (
+                <Link
+                    key={cat.name}
+                    to={`/services?category=${encodeURIComponent(cat.name)}`}
+                    className="navbar-category-card"
+                >
+                  <img src={cat.icon} alt={cat.name} className="navbar-category-icon" />
+                  <span className="navbar-category-label">{cat.name}</span>
+                </Link>
+            ))}
           </div>
-        ))}
-      </div>
+
+      )}
     </header>
   );
 };

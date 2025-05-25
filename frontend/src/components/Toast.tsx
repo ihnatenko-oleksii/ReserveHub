@@ -2,10 +2,17 @@ import { useEffect, useState } from 'react';
 
 interface ToastProps {
   message: string;
+  type?: 'success' | 'error' | 'info';
   onClose: () => void;
 }
 
-const Toast = ({ message, onClose }: ToastProps) => {
+const bgMap = {
+  success: 'bg-green-600',
+  error: 'bg-red-600',
+  info: 'bg-gray-800',
+};
+
+const Toast = ({ message, type = 'info', onClose }: ToastProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -18,15 +25,16 @@ const Toast = ({ message, onClose }: ToastProps) => {
   }, [onClose]);
 
   return (
-    <div
-      className={`
-        fixed bottom-6 left-1/2 transform -translate-x-1/2
-        bg-gray-800 text-white px-4 py-3 rounded shadow-lg
-        ${isVisible ? 'animate-fade-in' : 'animate-fade-out'}
+      <div
+          className={`
+        fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50
+        px-6 py-4 rounded-lg shadow-xl text-white text-sm
+        transition-all duration-300 ease-in-out
+        ${bgMap[type]} ${isVisible ? 'animate-fade-in' : 'animate-fade-out'}
       `}
-    >
-      {message}
-    </div>
+      >
+        {message}
+      </div>
   );
 };
 
