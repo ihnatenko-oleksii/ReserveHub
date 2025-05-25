@@ -11,6 +11,7 @@ import com.reservehub.reservehub.modules.user.entity.User;
 import com.reservehub.reservehub.modules.user.repository.UserRepository;
 import com.reservehub.reservehub.modules.service.exception.ServiceNotFoundException;
 import com.reservehub.reservehub.modules.utils.files.FileStorageService;
+import com.reservehub.reservehub.modules.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +30,8 @@ public class ServiceService {
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
     private final ServiceImageRepository serviceImageRepository;
-
     private final FileStorageService fileStorageService;
-
+    private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
     public List<ServiceDTO> getAllServices(ServiceFilterDTO filter) {
@@ -73,8 +73,6 @@ public class ServiceService {
         return mapToDTO(serviceRepository.save(service));
     }
 
-    // ServiceService.java
-
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @serviceService.isOwner(#id, authentication.principal.id)")
     public ServiceDTO updateService(Long id, ServiceDTO serviceDTO, List<MultipartFile> images) {
@@ -96,10 +94,17 @@ public class ServiceService {
         }
         serviceImageRepository.saveAll(savedImages);
 
-        return mapToDTO(serviceRepository.save(service));
+        Service savedService = serviceRepository.save(service);
+
+        // Notify service owner about update
+        notificationService.createNotification(
+            service.getOwner(),
+            "Your service " + service.getName() + " has been updated",
+            "my-services"
+        );
+
+        return mapToDTO(savedService);
     }
-
-
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @serviceService.isOwner(#id, authentication.principal.id)")

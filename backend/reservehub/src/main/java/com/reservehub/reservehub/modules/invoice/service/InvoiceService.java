@@ -4,12 +4,14 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfWriter;
+import com.reservehub.reservehub.modules.invoice.dto.InvoiceUserViewDTO;
 import com.reservehub.reservehub.modules.invoice.entity.Invoice;
 import com.reservehub.reservehub.modules.invoice.enums.InvoiceStatus;
 import com.reservehub.reservehub.modules.invoice.exception.InvoiceNotFoundException;
 import com.reservehub.reservehub.modules.invoice.repository.InvoiceRepository;
 import com.reservehub.reservehub.modules.reservation.entity.Reservation;
 import com.reservehub.reservehub.modules.reservation.repository.ReservationRepository;
+import com.reservehub.reservehub.modules.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -31,7 +33,8 @@ import java.util.stream.Collectors;
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ReservationRepository reservationRepository;
-    private static final String INVOICE_DIR = "invoices";
+    private final NotificationService notificationService;
+    private static final String INVOICE_DIR = "uploads/invoices";
 
     @Transactional
     public Invoice generateInvoiceForReservation(Long reservationId) {
@@ -66,7 +69,16 @@ public class InvoiceService {
         invoice.setCreatedAt(LocalDateTime.now());
         invoice.setUpdatedAt(LocalDateTime.now());
 
-        return invoiceRepository.save(invoice);
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        // Notify provider about invoice creation
+        notificationService.createNotification(
+            reservation.getProvider(),
+            "Invoice created for " + reservation.getService().getName(),
+            "invoices"
+        );
+
+        return savedInvoice;
     }
 
     private void generatePdf(Reservation reservation, String pdfPath) throws DocumentException, IOException {
@@ -91,9 +103,29 @@ public class InvoiceService {
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with id: " + id));
     }
 
-    public List<Invoice> getInvoicesByUserId(Long userId) {
-        return invoiceRepository.findByClientId(userId);
+    public List<InvoiceUserViewDTO> getInvoicesByUserId(Long userId) {
+        List<Invoice> invoices = invoiceRepository.findByClientIdOrProviderId(userId, userId);
+
+        return invoices.stream().map(invoice -> InvoiceUserViewDTO.builder()
+                        .id(invoice.getId())
+                        .amount(invoice.getAmount())
+                        .status(invoice.getStatus().name())
+                        .pdfPath(invoice.getPdfPath())
+                        .createdAt(invoice.getCreatedAt())
+
+                        .reservationId(invoice.getReservation() != null ? invoice.getReservation().getId() : null)
+                        .serviceName(invoice.getReservation() != null && invoice.getReservation().getService() != null
+                                ? invoice.getReservation().getService().getName() : null)
+
+                        .clientId(invoice.getClient().getId())
+                        .clientName(invoice.getClient().getName())
+
+                        .providerId(invoice.getProvider().getId())
+                        .providerName(invoice.getProvider().getName())
+                        .build())
+                .collect(Collectors.toList());
     }
+
 
     public Resource getInvoicePdf(Long id) throws IOException {
         Invoice invoice = getInvoiceById(id);

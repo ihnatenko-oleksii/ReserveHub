@@ -57,15 +57,16 @@ public class ReservationService {
         reservation.setCreatedAt(LocalDateTime.now());
         reservation.setUpdatedAt(LocalDateTime.now());
 
-        ReservationDTO reservationDTO = mapToDTO(reservationRepository.save(reservation));
+        Reservation savedReservation = reservationRepository.save(reservation);
 
+        // Notify provider about new reservation
         notificationService.createNotification(
-                service.getOwner(),
-                "Nowa rezerwacja usługi: " + service.getName(),
-                "my-obligations"
+            provider,
+            "New reservation for service: " + service.getName(),
+            "my-obligations"
         );
 
-        return reservationDTO;
+        return mapToDTO(savedReservation);
     }
 
     @Transactional
@@ -99,6 +100,12 @@ public class ReservationService {
         // Generate invoice if status changed to CONFIRMED
         if (oldStatus != ReservationStatus.CONFIRMED && dto.getStatus() == ReservationStatus.CONFIRMED) {
             invoiceService.generateInvoiceForReservation(savedReservation.getId());
+            // Notify client about confirmation
+            notificationService.createNotification(
+                user,
+                "Your reservation has been confirmed",
+                "my-reservations"
+            );
         }
 
         return mapToDTO(savedReservation);
@@ -109,16 +116,42 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
 
+        ReservationStatus oldStatus = reservation.getStatus();
         reservation.setStatus(status);
         reservation.setUpdatedAt(LocalDateTime.now());
 
-        Reservation res = reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // Handle notifications based on status change
         if (status == ReservationStatus.CONFIRMED) {
             invoiceService.generateInvoiceForReservation(reservation.getId());
+            notificationService.createNotification(
+                reservation.getUser(),
+                "Your reservation has been confirmed",
+                "my-reservations"
+            );
+        } else if (status == ReservationStatus.CANCELLED) {
+            // Notify both client and provider about cancellation
+            notificationService.createNotification(
+                reservation.getUser(),
+                "The reservation was cancelled",
+                "my-reservations"
+            );
+            notificationService.createNotification(
+                reservation.getProvider(),
+                "The reservation was cancelled",
+                "my-obligations"
+            );
+        } else if (status == ReservationStatus.COMPLETED) {
+            notificationService.createNotification(
+                reservation.getUser(),
+                "Reservation completed. Thank you!",
+                "my-reservations"
+            );
         }
-        return mapToDTO(res);
-    }
 
+        return mapToDTO(savedReservation);
+    }
 
     @Transactional
     public void cancelReservation(Long id) {
@@ -128,6 +161,18 @@ public class ReservationService {
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservation.setUpdatedAt(LocalDateTime.now());
         reservationRepository.save(reservation);
+
+        // Notify both client and provider about cancellation
+        notificationService.createNotification(
+            reservation.getUser(),
+            "The reservation was cancelled",
+            "my-reservations"
+        );
+        notificationService.createNotification(
+            reservation.getProvider(),
+            "The reservation was cancelled",
+            "my-obligations"
+        );
     }
 
     public ReservationDTO getReservationById(Long id) {

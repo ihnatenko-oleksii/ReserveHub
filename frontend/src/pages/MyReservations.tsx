@@ -56,7 +56,11 @@ const MyReservations = () => {
               {r.notes && <p className="text-sm text-gray-600">📝 Notes: {r.notes}</p>}
               <p className="text-sm text-gray-600">👤 Provider: {r.providerName}</p>
 
-              <span className={`text-xs inline-block px-3 py-1 rounded-full bg-gray-100 border font-medium mt-2`}>
+              <span className={`text-xs inline-block px-3 py-1 rounded-full border border-2 font-medium mt-2`
+                + (r.status === 'CONFIRMED' ? ' text-green-600 border-green-200' : 
+                   r.status === 'PENDING' ? ' text-yellow-600 border-yellow-200' : 
+                   ' text-red-600 border-red-200')
+              }>
                 {r.status}
               </span>
 
