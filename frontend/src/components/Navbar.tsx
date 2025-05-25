@@ -33,7 +33,9 @@ const Navbar = () => {
       {/* Верхній рядок */}
       <div className="navbar-top">
         <div className="navbar-left">
-          <img src="/logo.png" alt="logo" className="navbar-logo" />
+            <Link to="/" className="navbar-link">
+              <img src="/logo.png" alt="logo" className="navbar-logo" />
+            </Link>
           {user && (
             <Link to="/dashboard" className="navbar-link">
               Dashboard
