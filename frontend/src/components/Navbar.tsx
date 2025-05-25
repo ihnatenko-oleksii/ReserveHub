@@ -32,7 +32,7 @@ const Navbar = () => {
     <header className="navbar">
       {/* Верхній рядок */}
       <div className="navbar-top">
-        <div className="navbar-left">
+        <div className="navbar-left mr-2">
             <Link to="/" className="navbar-link">
               <img src="/logo.png" alt="logo" className="navbar-logo" />
             </Link>
@@ -51,7 +51,7 @@ const Navbar = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <Link to={`/?text=${encodeURIComponent(query)}`} className="navbar-link navbar-icon ml-3 mt-2">
+          <Link to={`/services?text=${encodeURIComponent(query)}`} className="navbar-link navbar-icon ml-3 mt-2 mr-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -88,7 +88,7 @@ const Navbar = () => {
                 {/* <span className="navbar-name">
                   
                 </span> */}
-                <Link to="/profile" className="navbar-manage">{user.firstName} {user.lastName}</Link>
+                <Link to="/dashboard" className="navbar-manage">{user.firstName} {user.lastName}</Link>
                 <button onClick={handleLogout} className="navbar-logout">Logout</button>
               </div>
             </div>
@@ -96,7 +96,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {location.pathname === '/' && (
+      {(location.pathname === '/' || location.pathname === '/services') && (
           <div className="navbar-categories-container">
             {categories.map((cat) => (
                 <Link
