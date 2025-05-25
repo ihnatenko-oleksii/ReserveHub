@@ -1,8 +1,7 @@
 package com.reservehub.reservehub.modules.invoice.service;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Paragraph;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.reservehub.reservehub.modules.invoice.dto.InvoiceUserViewDTO;
 import com.reservehub.reservehub.modules.invoice.entity.Invoice;
@@ -86,17 +85,67 @@ public class InvoiceService {
         PdfWriter.getInstance(document, new FileOutputStream(pdfPath));
         document.open();
 
-        // Add content to PDF
-        document.add(new Paragraph("Invoice"));
-        document.add(new Paragraph("Client: " + reservation.getUser().getName()));
-        document.add(new Paragraph("Provider: " + reservation.getProvider().getName()));
-        document.add(new Paragraph("Service: " + reservation.getService().getName()));
-        document.add(new Paragraph("Date: " + reservation.getDate()));
-        document.add(new Paragraph("Time: " + reservation.getTime()));
-        document.add(new Paragraph("Amount: $" + reservation.getService().getPrice()));
+        // Fonts
+        Font titleFont = new Font(Font.HELVETICA, 20, Font.BOLD);
+        Font headerFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+        Font normalFont = new Font(Font.HELVETICA, 12);
+
+        // Title
+        Paragraph title = new Paragraph("INVOICE", titleFont);
+        title.setAlignment(Paragraph.ALIGN_CENTER);
+        title.setSpacingAfter(20f);
+        document.add(title);
+
+        // Client & Provider Info
+        Paragraph clientInfo = new Paragraph("Billed To: " + reservation.getUser().getName(), normalFont);
+        Paragraph providerInfo = new Paragraph("Provided By: " + reservation.getProvider().getName(), normalFont);
+        clientInfo.setSpacingAfter(5f);
+        providerInfo.setSpacingAfter(15f);
+        document.add(clientInfo);
+        document.add(providerInfo);
+
+        // Table with service info
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+
+        // Column headers
+        table.addCell(new Phrase("Service", headerFont));
+        table.addCell(new Phrase(reservation.getService().getName(), normalFont));
+        table.addCell(new Phrase("Date", headerFont));
+        table.addCell(new Phrase(reservation.getDate().toString(), normalFont));
+        table.addCell(new Phrase("Time", headerFont));
+        table.addCell(new Phrase(reservation.getTime().toString(), normalFont));
+        table.addCell(new Phrase("Duration", headerFont));
+        table.addCell(new Phrase(reservation.getService().getDuration() + " minutes", normalFont));
+        table.addCell(new Phrase("Price", headerFont));
+        table.addCell(new Phrase("$" + reservation.getService().getPrice(), normalFont));
+
+        document.add(table);
+
+        // Notes (if any)
+        if (reservation.getNotes() != null && !reservation.getNotes().isBlank()) {
+            Paragraph notesHeader = new Paragraph("Notes:", headerFont);
+            notesHeader.setSpacingBefore(10f);
+            Paragraph notes = new Paragraph(reservation.getNotes(), normalFont);
+            notes.setSpacingAfter(10f);
+            document.add(notesHeader);
+            document.add(notes);
+        }
+
+        // Footer
+        Paragraph issued = new Paragraph("Issued on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), normalFont);
+        issued.setSpacingBefore(30f);
+        document.add(issued);
+
+        Paragraph thankYou = new Paragraph("Thank you for your business!", normalFont);
+        thankYou.setSpacingBefore(15f);
+        document.add(thankYou);
 
         document.close();
     }
+
 
     public Invoice getInvoiceById(Long id) {
         return invoiceRepository.findById(id)
