@@ -32,6 +32,7 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(null);
+  const [notes, setNotes] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState('');
 
   const SERVICE_IMAGE_BASE_URL = 'http://localhost:8080/services_photos/';
@@ -78,20 +79,28 @@ const ServiceDetails = () => {
   };
 
   const handleBooking = async () => {
-    if (!selectedDate) return alert('Please select a date');
+  if (!selectedDate) return alert('Please select a date');
 
-    try {
-      await axios.post('/reservations', {
-        serviceId: service?.id,
-        providerId: service?.ownerId,
-        reservationDate: selectedDate,
-      });
-      showToast('Reservation created successfully!');
-    } catch (err) {
-      console.error('Failed to book service:', err);
-      alert('Failed to book service');
-    }
-  };
+  const isoDate = new Date(selectedDate);
+  const date = isoDate.toISOString().split('T')[0];       // YYYY-MM-DD
+  const time = isoDate.toTimeString().split(' ')[0];       // HH:mm:ss
+
+  try {
+    await axios.post('/reservations', {
+      serviceId: service?.id,
+      providerId: service?.ownerId,
+      userId: user?.id,
+      date,
+      time,
+      notes: notes
+    });
+
+    showToast('Reservation created successfully!', 'success');
+  } catch (err) {
+    console.error('Failed to book service:', err);
+    showToast('Failed to book service', 'error');
+  }
+};
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-gray-500">Loading...</p></div>;
   if (!service) return <div className="min-h-screen flex items-center justify-center"><p className="text-red-500">Service not found.</p></div>;
@@ -130,6 +139,13 @@ const ServiceDetails = () => {
                       <button onClick={handleDelete} className="text-red-600 hover:underline">🗑 Delete</button>
                     </div>
                 )}
+                {isOwner === false && (
+                  <button
+                    onClick={handleLike}
+                    className={`text-sm mt-1 self-end transition-colors ${liked ? 'text-red-600' : 'text-gray-500 hover:text-red-500'}`}>
+                      {liked ? '❤️ Liked' : '🤍 Like'}
+                  </button>
+                )}
               </div>
 
               {service.ownerName && (
@@ -150,31 +166,39 @@ const ServiceDetails = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 pt-6 mt-6">
-              {isAuthenticated ? (
-                  <>
-                    <div className="flex items-center gap-3">
-                      <input
-                          type="datetime-local"
-                          value={selectedDate}
-                          onChange={(e) => setSelectedDate(e.target.value)}
-                          className="border px-3 py-2 rounded w-full"
-                      />
-                      <button onClick={handleBooking} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                        Book Now
-                      </button>
-                    </div>
-                    <button
-                        onClick={handleLike}
-                        className={`text-sm mt-2 self-start ${liked ? 'text-red-600' : 'text-gray-500'}`}
-                    >
-                      {liked ? '❤️ Liked' : '🤍 Like'}
-                    </button>
-                  </>
-              ) : (
-                  <span className="text-sm text-gray-400 italic">Login to like and book</span>
-              )}
-            </div>
+          <div className="flex flex-col gap-4 pt-6 mt-6 border-t border-gray-200">
+            {isAuthenticated ? (
+              <>
+                {/* Data i przycisk */}
+                <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <input
+                    type="datetime-local"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="border px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-1/2"
+                  />
+                  <button
+                    onClick={handleBooking}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition-colors duration-200"
+                  >
+                    Book Now
+                  </button>
+                </div>
+
+                {/* Notes */}
+                <textarea
+                  placeholder="Additional notes (optional)..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="border px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 w-full min-h-[80px] resize-none"
+                />
+
+              </>
+            ) : (
+              <span className="text-sm text-gray-400 italic">Login to like and book</span>
+            )}
+          </div>
+
           </div>
         </div>
       </div>
