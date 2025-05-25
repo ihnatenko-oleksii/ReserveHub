@@ -18,7 +18,7 @@ import EditService from './pages/EditService';
 import ProfileEdit from './pages/ProfileEdit';
 import MyObligations from "./pages/MyObligations.tsx";
 import NotificationsPage from "./pages/NotificationsPage.tsx";
-
+import MyInvoices from "./pages/MyInvoices.tsx";
 
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
           <Route path="profile" element={<ProfileEdit />} />
           <Route path="my-obligations" element={<MyObligations />} />
           <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="invoices" element={<MyInvoices />} />
 
 
           {/* 🛡️ Ролі: тільки ADMIN */}
