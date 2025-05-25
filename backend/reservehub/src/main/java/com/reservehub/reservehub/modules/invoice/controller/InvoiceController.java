@@ -1,5 +1,6 @@
 package com.reservehub.reservehub.modules.invoice.controller;
 
+import com.reservehub.reservehub.modules.invoice.dto.InvoiceUserViewDTO;
 import com.reservehub.reservehub.modules.invoice.entity.Invoice;
 import com.reservehub.reservehub.modules.invoice.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Invoice>> getInvoicesByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<InvoiceUserViewDTO>> getInvoicesByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByUserId(userId));
     }
 } 
