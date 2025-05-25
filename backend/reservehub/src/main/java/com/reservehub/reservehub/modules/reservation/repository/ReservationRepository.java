@@ -1,5 +1,6 @@
 package com.reservehub.reservehub.modules.reservation.repository;
 
+import com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsDTO;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationExportDTO;
 import com.reservehub.reservehub.modules.user.entity.User;
 import com.reservehub.reservehub.modules.reservation.entity.Reservation;
@@ -25,4 +26,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "WHERE r.user = :user OR s.owner = :user")
     List<ReservationExportDTO> findReservationsForExport(@Param("user") User user);
 
+    @Query("""
+    SELECT new com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsDTO(
+        r.id, r.date, r.time, r.notes, r.status,
+        s.id, s.name, s.description,
+        p.name
+    )
+    FROM Reservation r
+    JOIN r.service s
+    JOIN r.provider p
+    WHERE r.user.id = :userId
+""")
+    List<ReservationDetailsDTO> findAllDetailsForUser(@Param("userId") Long userId);
 } 

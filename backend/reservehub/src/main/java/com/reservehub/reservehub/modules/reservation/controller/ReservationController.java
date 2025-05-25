@@ -1,6 +1,8 @@
 package com.reservehub.reservehub.modules.reservation.controller;
 
 import com.reservehub.reservehub.modules.reservation.dto.ReservationDTO;
+import com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsDTO;
+import com.reservehub.reservehub.modules.reservation.dto.ReservationExportDTO;
 import com.reservehub.reservehub.modules.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,7 @@ public class ReservationController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationDTO>> getAllReservationsForUser(@PathVariable Long userId) {
+    public ResponseEntity<List<ReservationDetailsDTO>> getAllReservationsForUser(@PathVariable Long userId) {
         return ResponseEntity.ok(reservationService.getAllReservationsForUser(userId));
     }
 }

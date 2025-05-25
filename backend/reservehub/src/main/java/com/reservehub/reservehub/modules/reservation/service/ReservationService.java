@@ -2,6 +2,8 @@ package com.reservehub.reservehub.modules.reservation.service;
 
 import com.reservehub.reservehub.modules.invoice.service.InvoiceService;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationDTO;
+import com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsDTO;
+import com.reservehub.reservehub.modules.reservation.dto.ReservationExportDTO;
 import com.reservehub.reservehub.modules.reservation.entity.Reservation;
 import com.reservehub.reservehub.modules.reservation.enums.ReservationStatus;
 import com.reservehub.reservehub.modules.reservation.exception.ReservationNotFoundException;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,10 +109,8 @@ public class ReservationService {
         return mapToDTO(reservation);
     }
 
-    public List<ReservationDTO> getAllReservationsForUser(Long userId) {
-        return reservationRepository.findByUserId(userId).stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    public List<ReservationDetailsDTO> getAllReservationsForUser(Long userId) {
+        return new ArrayList<>(reservationRepository.findAllDetailsForUser(userId));
     }
 
     private void validateReservationData(ReservationDTO dto) {
