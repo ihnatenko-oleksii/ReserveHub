@@ -1,8 +1,10 @@
 package com.reservehub.reservehub.modules.reservation.service;
 
 import com.reservehub.reservehub.modules.invoice.service.InvoiceService;
+import com.reservehub.reservehub.modules.notification.service.NotificationService;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationDTO;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsDTO;
+import com.reservehub.reservehub.modules.reservation.dto.ReservationDetailsObligationsDTO;
 import com.reservehub.reservehub.modules.reservation.dto.ReservationExportDTO;
 import com.reservehub.reservehub.modules.reservation.entity.Reservation;
 import com.reservehub.reservehub.modules.reservation.enums.ReservationStatus;
@@ -29,6 +31,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final ServiceRepository serviceRepository;
     private final InvoiceService invoiceService;
+    private final NotificationService notificationService;
 
     @Transactional
     public ReservationDTO createReservation(ReservationDTO dto) {
@@ -54,7 +57,15 @@ public class ReservationService {
         reservation.setCreatedAt(LocalDateTime.now());
         reservation.setUpdatedAt(LocalDateTime.now());
 
-        return mapToDTO(reservationRepository.save(reservation));
+        ReservationDTO reservationDTO = mapToDTO(reservationRepository.save(reservation));
+
+        notificationService.createNotification(
+                service.getOwner(),
+                "Nowa rezerwacja usługi: " + service.getName(),
+                "my-obligations"
+        );
+
+        return reservationDTO;
     }
 
     @Transactional
@@ -94,6 +105,22 @@ public class ReservationService {
     }
 
     @Transactional
+    public ReservationDTO updateStatusReservation(Long id, ReservationStatus status) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+        reservation.setStatus(status);
+        reservation.setUpdatedAt(LocalDateTime.now());
+
+        Reservation res = reservationRepository.save(reservation);
+        if (status == ReservationStatus.CONFIRMED) {
+            invoiceService.generateInvoiceForReservation(reservation.getId());
+        }
+        return mapToDTO(res);
+    }
+
+
+    @Transactional
     public void cancelReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found with id: " + id));
@@ -111,6 +138,11 @@ public class ReservationService {
 
     public List<ReservationDetailsDTO> getAllReservationsForUser(Long userId) {
         return new ArrayList<>(reservationRepository.findAllDetailsForUser(userId));
+    }
+
+
+    public List<ReservationDetailsObligationsDTO> getAllReservationsForProvider(Long providerId) {
+        return new ArrayList<>(reservationRepository.findAllDetailsForProvider(providerId));
     }
 
     private void validateReservationData(ReservationDTO dto) {

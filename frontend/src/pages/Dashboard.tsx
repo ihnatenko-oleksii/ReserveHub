@@ -42,6 +42,11 @@ const Dashboard = () => {
                   📋 My reservations
                 </Link>
               </li>
+              <li>
+                <Link to="/notifications" className="text-blue-600 hover:text-blue-800 transition duration-200">
+                  🔔 Notifications
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -60,7 +65,7 @@ const Dashboard = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/obligations" className="text-blue-600 hover:text-blue-800 transition duration-200">
+                <Link to="/my-obligations" className="text-blue-600 hover:text-blue-800 transition duration-200">
                   📆 My obligations
                 </Link>
               </li>
