@@ -55,14 +55,7 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
       </div>
-      <div className="flex justify-center mt-4">
-        <Link to="/login" className="text-blue-600 underline mr-4">
-          Log in
-        </Link>
-        <Link to="/Register" className="text-cyan-600 underline">
-          Sing Up
-        </Link>
-      </div>
+
 
     </div>
 
