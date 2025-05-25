@@ -48,9 +48,11 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className="mt-16 text-center">
+          <Link to="/services" className="text-blue-600 underline mr-4">
           <button className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
             Get Started
           </button>
+          </Link>
         </div>
       </div>
       <div className="flex justify-center mt-4">
