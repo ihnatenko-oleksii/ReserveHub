@@ -33,12 +33,16 @@ const ProfileEdit = () => {
         description: user.description || '',
         avatar: null,
       });
-      const avatarUrl = `http://localhost:8080/avatars/${user.avatarUrl}`;
-      setPreview(avatarUrl || null);
+      const avatarUrl = user.avatarUrl
+          ? `http://localhost:8080/avatars/${user.avatarUrl}`
+          : null;
+      setPreview(avatarUrl);
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -89,81 +93,124 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl text-center font-bold mb-6 text-gray-800">Edit Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-col items-center gap-4">
-          <img
-            src={preview || '/default-avatar.png'}
-            alt="Avatar Preview"
-            className="w-24 h-24 rounded-full object-cover"
-          />
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-        </div>
+      <div className="max-w-xl mx-auto p-6">
+        <h2 className="text-2xl text-center font-bold mb-6 text-gray-800">
+          Edit Profile
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Avatar upload */}
+          <div className="flex flex-col items-center gap-2">
+            <label className="text-sm font-medium text-gray-700">
+              Avatar Preview
+            </label>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+            <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-300 shadow">
+              {preview ? (
+                  <img
+                      src={preview}
+                      alt="Avatar Preview"
+                      className="w-full h-full object-cover"
+                  />
+              ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-xl">
+                    ?
+                  </div>
+              )}
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+            <label
+                htmlFor="avatar-upload"
+                className="cursor-pointer text-blue-600 hover:underline text-sm mt-2"
+            >
+              Choose new avatar
+            </label>
+            <input
+                id="avatar-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+          {/* First Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
+            <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+          {/* Last Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
+            <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            value={user?.email}
-            readOnly
-            className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500"
-          />
-        </div>
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone
+            </label>
+            <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-        >
-          Save Changes
-        </button>
-      </form>
-    </div>
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
+            <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          {/* Email (readonly) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+                type="email"
+                value={user?.email}
+                readOnly
+                className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500"
+            />
+          </div>
+
+          <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          >
+            Save Changes
+          </button>
+        </form>
+      </div>
   );
 };
 
