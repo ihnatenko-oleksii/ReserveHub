@@ -1,5 +1,6 @@
 package com.reservehub.reservehub.modules.reservation.entity;
 
+import com.reservehub.reservehub.modules.invoice.entity.Invoice;
 import com.reservehub.reservehub.modules.service.entity.Service;
 import com.reservehub.reservehub.modules.user.entity.User;
 import com.reservehub.reservehub.modules.reservation.enums.ReservationStatus;
@@ -32,6 +33,9 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Invoice invoice;
 
     private String notes;
     private LocalDateTime createdAt;

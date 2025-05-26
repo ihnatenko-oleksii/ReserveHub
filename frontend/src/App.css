@@ -1,81 +1,42 @@
-.App {
-  text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: start;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.hero-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 80px;
-  gap: 40px;
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 
-.hero-content {
-  flex: 1;
-  text-align: left;
+.card {
+  padding: 2em;
 }
 
-.hero-image {
-  flex: 1;
-  max-width: 500px;
+.read-the-docs {
+  color: #888;
 }
-
-.hero-title {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.hero-description {
-  font-size: 1.2rem;
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 30px;
-}
-
-.secondary-section {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  margin-top: 60px;
-  text-align: left;
-}
-
-.secondary-content {
-  flex: 1;
-}
-
-.secondary-image {
-  flex: 1;
-  max-width: 400px;
-}
-
-.secondary-title {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.secondary-description {
-  font-size: 1.1rem;
-  color: #666;
-  line-height: 1.5;
-} 

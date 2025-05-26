@@ -1,95 +1,63 @@
-# Java Spring Boot
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-# React
-# dependencies
-/frontend/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-/dist
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# Logs
-logs
+# === Java / Spring Boot ===
+target/
+*.class
+*.jar
+*.war
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# === IntelliJ IDEA ===
+.idea/
+/backend/.idea/
+*.iml
+*.iws
+out/
 
-# OS generated files
+# === Maven ===
+.mvn/
+!**/src/main/**/.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# === OS / misc ===
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# === Environment files ===
+.env
+*.env
+
+# === PostgreSQL volumes ===
+postgres_data/
+
+# === Docker ===
+*.pid
+*.tar
+docker-compose.override.yml
+
+# === Node / React frontend ===
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.next/
+frontend/.turbo/
+
+# === Logi i pliki robocze ===
+*.log
+logs/
+*.tmp
+*.swp
+
+# === VSCode / JetBrains ===
+.vscode/
+*.sublime*
+
+# === Backupy ===
+*.bak
+*.old
+*.orig
+
+# === Pliki ===
+uploads/
