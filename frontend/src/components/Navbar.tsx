@@ -154,7 +154,15 @@ const Navbar = () => {
 
         {(location.pathname === '/' || location.pathname === '/services') && (
             <div className="navbar-categories-container">
-              {categories.map((cat) => (
+              <Link
+                      key="All"
+                      to={`/services`}
+                      className="navbar-category-card"
+                  >
+                    <img src="/icons/all.png" alt="All" className="navbar-category-icon" style={{width: "60px", height: "60px", marginBottom: "-6px"}}/>
+                    <span className="navbar-category-label">All</span>
+                  </Link>
+              {categories.map((cat) => (  
                   <Link
                       key={cat.name}
                       to={`/services?category=${encodeURIComponent(cat.name)}`}
